@@ -1,5 +1,4 @@
-# Ignore the public directory
-public/
+# Ignore all .mp4 files in the public directory
 
-# Ignore node_modules
+# Ignore node_modules directory
 node_modules/
