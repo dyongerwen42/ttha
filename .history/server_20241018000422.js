@@ -89,8 +89,8 @@ app.use(express.json());
 const rssBaseInfo = {
   title: 'T.H.A Vastgoedonderhoud RSS Feed',
   description: 'Blijf op de hoogte van de laatste updates van T.H.A Vastgoedonderhoud. Wij bieden professionele schilderdiensten en gratis MJOP-software voor vastgoedbeheer in Hoorn, Almere en omstreken. Vraag nu een offerte aan voor schilderwerk of een NEN 2767-conditiemeting.',
-  feed_url: 'http://tha-diensten.nl/rss.xml',  // Corrected domain for the RSS feed
-  site_url: 'http://tha-diensten.nl',           // Corrected domain for the site
+  feed_url: 'http://tha-dieesten/rss.xml',  // Corrected domain for the RSS feed
+  site_url: 'http://localhost:3000',           // Corrected domain for the site
   language: 'nl',
   pubDate: new Date(),
   lastBuildDate: new Date(),
@@ -246,7 +246,7 @@ app.post('/submit-contact', upload.single('file'), async (req, res) => {
             service: 'gmail',
             auth: {
                 user: 'contact@tha-diensten.nl', // replace with your email
-                pass: '', // replace with your email password or app password
+                pass: 'wiyk xyip zubh tjyo', // replace with your email password or app password
             }
         });
 
@@ -313,11 +313,6 @@ app.get('/behangen', async (req, res) => {
         res.status(500).send('An error occurred while retrieving Behangen blogs.');
     }
 });
-// Serve sitemap.xml
-app.get('/sitemap.xml', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
-});
-
 
 
 app.get('/binnenschilderwerk', async (req, res) => {
@@ -608,17 +603,7 @@ app.get('/blogs/:title', async (req, res) => {
     }
   });
   
- // 404 Error Handler: Serve the 'Diensten' page for undefined routes
-app.use(async(req, res, next) => {
-    try {
-        const blogs = await getBlogs('Diensten'); // Use 'Diensten' as category
-        res.render('diensten', { blogs });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('An error occurred while retrieving blogs.');
-    }
-});
- 
+  
 // Start Express server
 app.listen(PORT, () => {
   console.log(`Server is running on https://tha-diensten.nl`);  // Adjusted domain for production

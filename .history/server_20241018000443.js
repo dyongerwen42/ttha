@@ -318,6 +318,10 @@ app.get('/sitemap.xml', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
 });
 
+// 404 Error Handler: Serve the 'Diensten' page for undefined routes
+app.use((req, res, next) => {
+    res.status(404).render('diensten');
+});
 
 
 app.get('/binnenschilderwerk', async (req, res) => {
@@ -608,17 +612,7 @@ app.get('/blogs/:title', async (req, res) => {
     }
   });
   
- // 404 Error Handler: Serve the 'Diensten' page for undefined routes
-app.use(async(req, res, next) => {
-    try {
-        const blogs = await getBlogs('Diensten'); // Use 'Diensten' as category
-        res.render('diensten', { blogs });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('An error occurred while retrieving blogs.');
-    }
-});
- 
+  
 // Start Express server
 app.listen(PORT, () => {
   console.log(`Server is running on https://tha-diensten.nl`);  // Adjusted domain for production

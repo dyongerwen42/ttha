@@ -609,7 +609,7 @@ app.get('/blogs/:title', async (req, res) => {
   });
   
  // 404 Error Handler: Serve the 'Diensten' page for undefined routes
-app.use(async(req, res, next) => {
+app.use((req, res, next) => {
     try {
         const blogs = await getBlogs('Diensten'); // Use 'Diensten' as category
         res.render('diensten', { blogs });
