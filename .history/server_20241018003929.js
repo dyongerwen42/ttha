@@ -319,7 +319,7 @@ app.get('/sitemap.xml', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
 });
 app.get('/sitemap_old.xml', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'sitemap_old.xml'));
+    res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
 });
 
 

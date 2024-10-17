@@ -8,7 +8,6 @@ const fs = require('fs');
 const compression = require('compression');
 const seoSecurityHeaders = require('./seoSecurityHeaders'); // Import the middleware
 const nodemailer = require('nodemailer');
-const axios = require('axios');
 
 // Apply the SEO and security headers middleware globally
 
@@ -318,9 +317,7 @@ app.get('/behangen', async (req, res) => {
 app.get('/sitemap.xml', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
 });
-app.get('/sitemap_old.xml', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'sitemap_old.xml'));
-});
+
 
 
 app.get('/binnenschilderwerk', async (req, res) => {

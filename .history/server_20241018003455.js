@@ -318,9 +318,7 @@ app.get('/behangen', async (req, res) => {
 app.get('/sitemap.xml', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
 });
-app.get('/sitemap_old.xml', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'sitemap_old.xml'));
-});
+
 
 
 app.get('/binnenschilderwerk', async (req, res) => {
