@@ -171,7 +171,7 @@ const generateRSSFeed = async () => {
           _attr: {
             url: featuredImageUrl,  // Corrected and encoded image URL
             medium: 'image',
-            type: 'image/jpeg'
+            type: 'image/webp'
           }
         }},
         { 'dc:creator': 'Thierry Henrich' }
