@@ -5437,7 +5437,7 @@ label {
         display: none;
     }
 
-    #mobile {
+    .header-mobile {
         display: block;
     }
 }

@@ -5433,11 +5433,11 @@ label {
 
 /* Toon de mobiele header en verberg de pc-header bij een schermbreedte kleiner dan 992px */
 @media (max-width: 991px) {
-    #pc {
+    pc {
         display: none;
     }
 
-    #mobile {
+    .header-mobile {
         display: block;
     }
 }
