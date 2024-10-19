@@ -4000,13 +4000,11 @@ label {
 /* testimonial-three */
 .testimonial-area-three .testimonial-active-two .slick-dots li button {
 	background: #0263C7;
-}
-
-.slick-dots{
-	display: none !important;
+	display: none;
 }
 .testimonial-area-three .testimonial-active-two .slick-dots li.slick-active button {
 	background: #7EBEFF;
+	display: none;
 }
 
 /* testimonial-four */

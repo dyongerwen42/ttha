@@ -4003,7 +4003,7 @@ label {
 }
 
 .slick-dots{
-	display: none !important;
+	display: none;
 }
 .testimonial-area-three .testimonial-active-two .slick-dots li.slick-active button {
 	background: #7EBEFF;

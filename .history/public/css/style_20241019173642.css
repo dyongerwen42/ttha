@@ -4002,9 +4002,7 @@ label {
 	background: #0263C7;
 }
 
-.slick-dots{
-	display: none !important;
-}
+.slick
 .testimonial-area-three .testimonial-active-two .slick-dots li.slick-active button {
 	background: #7EBEFF;
 }
