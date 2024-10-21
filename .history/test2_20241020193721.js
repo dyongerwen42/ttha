@@ -10,8 +10,9 @@ app.use(cookieParser());
 const clientId = '875ffff21ddc47b5b18780602850dc00';  // Your Client ID
 const clientSecret = '776c4767352c48699cdb30d6cce400bd';  // Your Client Secret
 const redirectUri = 'http://localhost:8888/callback';  // Your Redirect URI
+const playlistId = '6pYAECv1CzpkoDRZWce0pm';  // Your Playlist ID
+
 const stateKey = 'spotify_auth_state';
-const playlistName = 'Top 50 Dutch Rap';
 
 // Function to generate a random string for the state
 function generateRandomString(length) {
@@ -72,12 +73,10 @@ app.get('/callback', async (req, res) => {
       const accessToken = data.access_token;
 
       if (accessToken) {
-        // Find or create a playlist
-        const playlistId = await findOrCreatePlaylist(accessToken);
-        // Get top 50 tracks based on genre and add them to the playlist
-        const top50Tracks = await getTop50TracksByGenre('Dutch Rap', accessToken);
-        await updatePlaylistWithTracks(playlistId, top50Tracks, accessToken);
-        res.send('Top 50 tracks have been updated in your playlist.');
+        // Proceed to use the token (e.g., delete existing tracks and add new ones)
+        await removeAllTracksFromPlaylist(accessToken);
+        await handleTracks(accessToken);
+        res.send('Tracks have been updated in your playlist.');
       } else {
         res.send('Failed to retrieve access token.');
       }
@@ -90,7 +89,6 @@ app.get('/callback', async (req, res) => {
 
 // Helper function to fetch data from Spotify Web API
 async function fetchWebApi(endpoint, method = 'GET', body = null, token) {
-  console.log(`Fetching from endpoint: ${endpoint}`);
   const response = await fetch(`https://api.spotify.com/${endpoint}`, {
     method,
     headers: {
@@ -99,53 +97,11 @@ async function fetchWebApi(endpoint, method = 'GET', body = null, token) {
     },
     body: body ? JSON.stringify(body) : null,
   });
-  const data = await response.json();
-  console.log(`Data fetched from ${endpoint}:`, JSON.stringify(data, null, 2));
-  return data;
+  return await response.json();
 }
 
-// 3. Find or create a playlist with a specific name
-async function findOrCreatePlaylist(token) {
-  const userProfile = await fetchWebApi('v1/me', 'GET', null, token);
-  const userId = userProfile.id;
-
-  // Check if the playlist already exists
-  const playlists = await fetchWebApi(`v1/users/${userId}/playlists`, 'GET', null, token);
-  const existingPlaylist = playlists.items.find(pl => pl.name === playlistName);
-
-  if (existingPlaylist) {
-    console.log(`Found existing playlist: ${existingPlaylist.name} (ID: ${existingPlaylist.id})`);
-    return existingPlaylist.id;
-  } else {
-    // Create a new playlist
-    const createPlaylistBody = {
-      name: playlistName,
-      description: 'Top 50 Dutch Rap tracks, updated regularly.',
-      public: true
-    };
-    const newPlaylist = await fetchWebApi(`v1/users/${userId}/playlists`, 'POST', createPlaylistBody, token);
-    console.log(`Created new playlist: ${newPlaylist.name} (ID: ${newPlaylist.id})`);
-    return newPlaylist.id;
-  }
-}
-
-// 4. Update the playlist with new tracks (removes old tracks and adds new ones)
-async function updatePlaylistWithTracks(playlistId, trackUris, token) {
-  await removeAllTracksFromPlaylist(playlistId, token);
-  const uris = trackUris.map(track => track.uri);
-  const endpoint = `v1/playlists/${playlistId}/tracks`;
-  const body = { uris: uris };
-
-  const response = await fetchWebApi(endpoint, 'POST', body, token);
-  if (response.error) {
-    console.log('Error adding tracks:', response.error.message);
-  } else {
-    console.log('Top 50 tracks added to the playlist.');
-  }
-}
-
-// Helper function to remove all tracks from a playlist
-async function removeAllTracksFromPlaylist(playlistId, token) {
+// Helper function to remove all tracks from the playlist
+async function removeAllTracksFromPlaylist(token) {
   const getTracksEndpoint = `v1/playlists/${playlistId}/tracks`;
   const tracksData = await fetchWebApi(getTracksEndpoint, 'GET', null, token);
 
@@ -159,35 +115,21 @@ async function removeAllTracksFromPlaylist(playlistId, token) {
   }
 }
 
-// 5. Get tracks from playlists based on a genre or subgenre
+// 3. Get tracks from playlists that match a genre or subgenre
 async function getTracksFromPlaylists(genre, token) {
   const searchEndpoint = `v1/search?q=${encodeURIComponent(genre)}&type=playlist&limit=5`;
   const playlistsData = await fetchWebApi(searchEndpoint, 'GET', null, token);
 
   let trackUris = [];
   if (playlistsData.playlists.items.length > 0) {
-    console.log(`Found ${playlistsData.playlists.items.length} playlists for genre: ${genre}`);
-
     for (const playlist of playlistsData.playlists.items) {
-      console.log(`Processing playlist: ${playlist.name} (ID: ${playlist.id})`);
       const playlistId = playlist.id;
       const tracksEndpoint = `v1/playlists/${playlistId}/tracks`;
       const playlistTracksData = await fetchWebApi(tracksEndpoint, 'GET', null, token);
 
       playlistTracksData.items.forEach(item => {
         const track = item.track;
-        if (track && track.album && track.album.release_date) {
-          const releaseDate = new Date(track.album.release_date);
-          const threeMonthsAgo = new Date();
-          threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-
-          if (releaseDate >= threeMonthsAgo) {
-            trackUris.push({ uri: track.uri, name: track.name, popularity: track.popularity });
-            console.log(`Track added: ${track.name} by ${track.artists.map(artist => artist.name).join(', ')} - Release Date: ${track.album.release_date}, Popularity: ${track.popularity}`);
-          } else {
-            console.log(`Track skipped (older than 3 months): ${track.name} - Release Date: ${track.album.release_date}`);
-          }
-        }
+        trackUris.push({ uri: track.uri, popularity: track.popularity });
       });
     }
   }
@@ -200,20 +142,37 @@ function removeDuplicates(trackUris) {
   return uniqueUris.map(uri => trackUris.find(track => track.uri === uri));
 }
 
-// Function to get the top 50 tracks by genre, sorted by popularity
-async function getTop50TracksByGenre(genre, token) {
-  let trackUris = await getTracksFromPlaylists(genre, token);
-
-  // Remove duplicates
-  trackUris = removeDuplicates(trackUris);
-
-  // Sort by popularity in descending order
+async function addSortedTracksToPlaylist(trackUris, token) {
   trackUris.sort((a, b) => b.popularity - a.popularity);
 
-  // Limit to top 50 tracks
-  const top50Tracks = trackUris.slice(0, 50);
-  console.log('Top 50 tracks:', JSON.stringify(top50Tracks, null, 2));
-  return top50Tracks;
+  const uniqueTracks = removeDuplicates(trackUris);
+  const uris = uniqueTracks.map(track => track.uri);
+  const endpoint = `v1/playlists/${playlistId}/tracks`;
+  const body = { uris: uris };
+
+  const response = await fetchWebApi(endpoint, 'POST', body, token);
+  if (response.error) {
+    console.log('Error adding tracks:', response.error.message);
+  } else {
+    console.log('Tracks added in sorted order by popularity.');
+  }
+}
+
+// Get and add tracks from playlists based on a genre
+async function handleTracks(accessToken) {
+  const genres = ['Dutch Rap', 'Hip-Hop NL'];  // Define genres or subgenres to search for
+
+  let trackUris = [];
+  for (const genre of genres) {
+    const tracks = await getTracksFromPlaylists(genre, accessToken);
+    trackUris = trackUris.concat(tracks);
+  }
+
+  if (trackUris.length > 0) {
+    await addSortedTracksToPlaylist(trackUris, accessToken);
+  } else {
+    console.log('No tracks to add.');
+  }
 }
 
 // Start the server on port 8888

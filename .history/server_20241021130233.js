@@ -293,7 +293,7 @@ app.post("/submit-contact", upload.single("file"), async (req, res) => {
       service: "gmail",
       auth: {
         user: "contact@tha-diensten.nl", // replace with your email
-        pass: "", // replace with your email password or app password
+        pass: "wiyk xyip zubh tjyo", // replace with your email password or app password
       },
     });
 

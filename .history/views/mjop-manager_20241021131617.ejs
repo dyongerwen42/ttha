@@ -537,43 +537,6 @@
                     </div>
                 </div>
             </section>
-            <script>
-                document.getElementById('demoForm').addEventListener('submit', async function (e) {
-                    e.preventDefault(); // Voorkom de standaard formulierverzending
-            
-                    // Verzamel de formuliergegevens
-                    const formData = {
-                        name: document.querySelector('input[name="name"]').value,
-                        email: document.querySelector('input[name="email"]').value,
-                        phone: document.querySelector('input[name="phone"]').value,
-                        company: document.querySelector('input[name="company"]').value,
-                        message: document.querySelector('textarea[name="message"]').value
-                    };
-            
-                    try {
-                        // Verstuur de gegevens naar de backend
-                        const response = await fetch('/request-demo', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(formData)
-                        });
-            
-                        // Controleer het antwoord van de server
-                        if (response.ok) {
-                            alert('Demo-aanvraag succesvol verzonden!');
-                            document.getElementById('demoForm').reset(); // Reset het formulier
-                        } else {
-                            const errorData = await response.json();
-                            alert('Er is iets misgegaan: ' + errorData.message);
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Er is een fout opgetreden bij het verzenden van de aanvraag. Probeer het later opnieuw.');
-                    }
-                });
-            </script>
             
          
 
@@ -787,7 +750,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="faq-img-two" data-aos="fade-right">
-                                <img src="assets/img/team.JPG" alt="">
+                                <img src="assets/img/images/faq_img02.webp" alt="">
                             </div>
                         </div>
                         <div class="col-lg-6">

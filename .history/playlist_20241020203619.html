@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Playlist Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #121212; color: #fff; }
+        .spotify-green { background-color: #1DB954; }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-3xl font-bold text-green-500 mb-6">Spotify Playlist Manager</h1>
+        
+        <!-- Authorization Form -->
+        <div id="authSection">
+            <input type="text" id="clientId" placeholder="Client ID" class="w-full p-3 rounded bg-gray-800 mb-2 text-white">
+            <input type="text" id="clientSecret" placeholder="Client Secret" class="w-full p-3 rounded bg-gray-800 mb-2 text-white">
+            <button id="authBtn" class="spotify-green px-4 py-2 rounded text-black font-bold">Authorize with Spotify</button>
+        </div>
+
+        <!-- Controls Section -->
+        <div id="controls" class="hidden">
+            <div class="mt-6">
+                <input type="text" id="query" placeholder="Enter Genre or Subgenre" class="w-full p-3 rounded bg-gray-800 text-white">
+                <button id="searchPlaylists" class="spotify-green px-4 py-2 rounded text-black font-bold mt-2">Search Playlists</button>
+            </div>
+
+            <div id="playlists" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6"></div>
+
+            <div class="mt-6">
+                <input type="text" id="playlistName" placeholder="New Playlist Name" class="w-full p-3 rounded bg-gray-800 text-white">
+                <button id="createPlaylist" class="spotify-green px-4 py-2 rounded text-black font-bold mt-2">Create/Update Playlist</button>
+            </div>
+
+            <button id="scrapeTracks" class="spotify-green px-4 py-2 rounded text-black font-bold mt-6">Scrape Tracks</button>
+
+            <div id="output" class="mt-6"></div>
+        </div>
+    </div>
+
+    <script>
+        const authBtn = document.getElementById('authBtn');
+        const controls = document.getElementById('controls');
+        const playlistsContainer = document.getElementById('playlists');
+        const output = document.getElementById('output');
+
+        let accessToken = '';
+
+        authBtn.addEventListener('click', async () => {
+            const clientId = document.getElementById('clientId').value;
+            const clientSecret = document.getElementById('clientSecret').value;
+
+            if (!clientId || !clientSecret) {
+                alert('Please enter both Client ID and Client Secret.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8888/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ clientId, clientSecret })
+                });
+                const data = await response.json();
+                window.location.href = data.authUrl;
+            } catch (error) {
+                console.error('Error initiating login:', error);
+            }
+        });
+
+        // Extract the access token from the URL after authorization
+        accessToken = new URLSearchParams(window.location.hash.substring(1)).get('access_token');
+
+        if (accessToken) {
+            controls.classList.remove('hidden');
+            document.getElementById('searchPlaylists').addEventListener('click', searchPlaylists);
+            document.getElementById('scrapeTracks').addEventListener('click', scrapeTracks);
+            document.getElementById('createPlaylist').addEventListener('click', createPlaylist);
+        }
+
+        async function searchPlaylists() {
+            const query = document.getElementById('query').value;
+            try {
+                const response = await fetch(`http://localhost:8888/search?query=${query}&token=${accessToken}`);
+                const playlists = await response.json();
+                displayPlaylists(playlists);
+            } catch (error) {
+                console.error('Error searching playlists:', error);
+            }
+        }
+
+        function displayPlaylists(playlists) {
+            playlistsContainer.innerHTML = '';
+            playlists.forEach(playlist => {
+                const div = document.createElement('div');
+                div.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'flex', 'flex-col', 'items-center');
+                div.innerHTML = `
+                    <img src="${playlist.images[0]?.url || 'https://via.placeholder.com/150'}" class="w-32 h-32 mb-2 rounded-lg">
+                    <h3 class="text-center text-white font-semibold">${playlist.name}</h3>
+                    <input type="checkbox" value="${playlist.id}" class="mt-2 playlist-checkbox">
+                `;
+                playlistsContainer.appendChild(div);
+            });
+        }
+
+        async function scrapeTracks() {
+            const selectedPlaylists = Array.from(document.querySelectorAll('.playlist-checkbox:checked')).map(cb => cb.value);
+            try {
+                const response = await fetch('http://localhost:8888/scrape-tracks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ playlists: selectedPlaylists, token: accessToken })
+                });
+                const tracks = await response.json();
+                displayTracks(tracks);
+            } catch (error) {
+                console.error('Error scraping tracks:', error);
+            }
+        }
+
+        function displayTracks(tracks) {
+            output.innerHTML = '';
+            tracks.forEach(track => {
+                const trackItem = document.createElement('div');
+                trackItem.classList.add('bg-gray-800', 'p-2', 'rounded', 'mb-2', 'flex', 'justify-between', 'items-center');
+                trackItem.textContent = `${track.name} by ${track.artist} - Popularity: ${track.popularity}`;
+                output.appendChild(trackItem);
+            });
+        }
+
+        async function createPlaylist() {
+            const name = document.getElementById('playlistName').value;
+            if (!name) {
+                alert('Please enter a playlist name.');
+                return;
+            }
+
+            const selectedTracks = Array.from(document.querySelectorAll('#output > div'))
+                .map(track => ({
+                    uri: track.getAttribute('data-uri'),
+                    popularity: track.getAttribute('data-popularity'),
+                }));
+
+            try {
+                const response = await fetch('http://localhost:8888/create-or-update-playlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        tracks: selectedTracks,
+                        token: accessToken
+                    })
+                });
+                const result = await response.json();
+                alert(`Playlist "${result.name}" created/updated!`);
+            } catch (error) {
+                console.error('Error creating/updating playlist:', error);
+            }
+        }
+    </script>
+</body>
+</html>
