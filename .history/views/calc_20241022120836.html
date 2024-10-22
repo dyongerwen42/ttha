@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muur Annotatie Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-2xl font-bold text-center mb-4">Muur Annotatie Tool</h1>
+        <input type="file" id="imageUpload" accept="image/*" class="block w-full p-2 border border-gray-300 rounded mb-4">
+        
+        <div id="canvasContainer" class="relative overflow-hidden border-2 border-gray-300">
+            <canvas id="drawingCanvas" class="max-w-full bg-white"></canvas>
+        </div>
+        
+        <div id="annotations" class="mt-6 bg-white p-4 rounded shadow">
+            <h2 class="text-xl font-semibold mb-2">Annotaties</h2>
+            <ul id="annotationList" class="space-y-2"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('imageUpload').addEventListener('change', loadImage);
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        let annotations = [];
+
+        function loadImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        canvas.addEventListener('click', addAnnotation);
+
+        function addAnnotation(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            const lengthCm = prompt('Voer de lengte van de muur in cm:');
+            const heightCm = prompt('Voer de hoogte van de muur in cm:');
+            
+            if (lengthCm && heightCm) {
+                const annotation = {
+                    x: x,
+                    y: y,
+                    length: parseFloat(lengthCm),
+                    height: parseFloat(heightCm)
+                };
+                annotations.push(annotation);
+                drawAnnotations();
+                updateAnnotationList();
+            }
+        }
+
+        function drawAnnotations() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            annotations.forEach(annotation => {
+                ctx.beginPath();
+                ctx.arc(annotation.x, annotation.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+                ctx.closePath();
+            });
+        }
+
+        function updateAnnotationList() {
+            const list = document.getElementById('annotationList');
+            list.innerHTML = '';
+            annotations.forEach((annotation, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = "bg-gray-100 p-2 rounded border border-gray-200";
+                listItem.innerHTML = `
+                    <div>
+                        <strong>Annotatie ${index + 1}:</strong> 
+                        Lengte: ${annotation.length} cm, 
+                        Hoogte: ${annotation.height} cm
+                    </div>
+                    <button class="text-red-500 hover:text-red-700" onclick="removeAnnotation(${index})">Verwijder</button>
+                `;
+                list.appendChild(listItem);
+            });
+        }
+
+        function removeAnnotation(index) {
+            annotations.splice(index, 1);
+            drawAnnotations();
+            updateAnnotationList();
+        }
+    </script>
+</body>
+</html>

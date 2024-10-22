@@ -1,0 +1,298 @@
+<!doctype html>
+<html class="no-js" lang="nl">
+    <head>
+        <meta charset="utf-8" />
+    <%- include('partials/json') %>
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title><%= blog.seoTitle %> - THA Vastgoed & Schilderwerk</title>
+        <meta name="description" content="<%= blog.seoDescription %>">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords" content="<%= blog.seoKeywords.join(', ') %>">
+    
+        <!-- Canonical Link to Avoid Duplicate Content Issues -->
+        <link rel="canonical" href="https://tha-diensten.nl/blogs/<%= blog.title.replace(/\s+/g, '-') %>"/>
+    
+        <!-- Robots Meta Tag for Indexing and Crawling Control -->
+        <meta name="robots" content="index, follow">
+    
+        <!-- Open Graph Meta Tags for Social Sharing (Facebook, LinkedIn) -->
+        <meta property="og:title" content="<%= blog.fbTitle %>" />
+        <meta property="og:description" content="<%= blog.fbDescription %>" />
+        <meta property="og:image" content="https://tha-diensten.nl/<%= blog.fbImage %>" />
+        <meta property="og:url" content="https://tha-diensten.nl/blogs/<%= blog.title.replace(/\s+/g, '-') %>" />
+        <meta property="og:type" content="article" />
+        <meta property="article:published_time" content="<%= blog.date.toISOString() %>" />
+        <meta property="article:modified_time" content="<%= blog.updatedAt ? blog.updatedAt.toISOString() : blog.date.toISOString() %>" />
+    
+        <!-- Twitter Card Meta Tags for Twitter Sharing -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="<%= blog.twitterTitle %>" />
+        <meta name="twitter:description" content="<%= blog.twitterDescription %>" />
+        <meta name="twitter:image" content="https://tha-diensten.nl/<%= blog.twitterImage %>" />
+        <meta name="twitter:url" content="https://tha-diensten.nl/blogs/<%= blog.title.replace(/\s+/g, '-') %>" />
+    
+        <!-- Language Declaration -->
+        <html lang="nl">
+    
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.webp">
+    
+        <!-- CSS Files -->
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/assets/css/animate.min.css">
+        <link rel="stylesheet" href="/assets/css/magnific-popup.css">
+        <link rel="stylesheet" href="/assets/css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="/assets/css/odometer.css">
+        <link rel="stylesheet" href="/assets/css/jarallax.css">
+        <link rel="stylesheet" href="/assets/css/swiper-bundle.min.css">
+        <link rel="stylesheet" href="/assets/css/BeerSlider.css">
+        <link rel="stylesheet" href="/assets/css/tg-cursor.css">
+        <link rel="stylesheet" href="/assets/css/slick.css">
+        <link rel="stylesheet" href="/assets/css/default.css">
+        <link rel="stylesheet" href="/assets/css/aos.css">
+        <link rel="stylesheet" href="/assets/css/style.css">
+        <link rel="stylesheet" href="/assets/css/responsive.css">
+    
+        <!-- JSON-LD Structured Data for Schema Markup -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "THA Vastgoed & Schilderwerk",
+          "url": "https://tha-diensten.nl",
+          "logo": "https://tha-diensten.nl/assets/img/logo/logo.webp",
+          "sameAs": [
+            "https://www.facebook.com/schilder.hoorn/",
+            "https://twitter.com",
+            "https://www.linkedin.com/company/schildersbedrijf-hoorn",
+            "https://www.instagram.com/tha_vastgoed_schilderwerk/"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+31-85-060-1982",
+            "contactType": "Customer Service",
+            "areaServed": "NL",
+            "availableLanguage": "Dutch"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Kieftentuin 1",
+            "addressLocality": "Hoorn",
+            "postalCode": "1689 LH",
+            "addressCountry": "NL"
+          },
+          "founder": {
+            "@type": "Person",
+            "name": "Thierry Henrich"
+          },
+          "serviceType": [
+            {
+              "@type": "Service",
+              "name": "Schilderwerk",
+              "description": "Professionele schilderdiensten voor woningen en bedrijven",
+              "areaServed": "Noord-Holland, Flevoland",
+              "provider": {
+                "@type": "Organization",
+                "name": "THA Vastgoed & Schilderwerk"
+              }
+            },
+            {
+              "@type": "Service",
+              "name": "Vastgoedbeheer",
+              "description": "Compleet vastgoedbeheer inclusief inspectie, onderhoud en rapportage",
+              "areaServed": "Noord-Holland, Flevoland",
+              "provider": {
+                "@type": "Organization",
+                "name": "THA Vastgoed & Schilderwerk"
+              }
+            }
+          ],
+          "article": {
+            "@type": "Article",
+            "headline": "<%= blog.title %>",
+            "datePublished": "<%= blog.date.toISOString() %>",
+            "author": {
+              "@type": "Person",
+              "name": "Thierry Henrich"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "THA Vastgoed & Schilderwerk",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://tha-diensten.nl/assets/img/logo/logo.webp"
+              }
+            },
+            "image": "https://tha-diensten.nl/<%= blog.featuredImage %>",
+            "articleBody": "<%- blog.content %>",
+            "keywords": "<%= blog.seoKeywords.join(', ') %>"
+          }
+        }
+        </script>
+    
+        <!-- Breadcrumbs for Better SEO -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://tha-diensten.nl"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Blogs",
+              "item": "https://tha-diensten.nl/blogs"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "<%= blog.title %>",
+              "item": "https://tha-diensten.nl/blogs/<%= blog.title.replace(/\s+/g, '-') %>"
+            }
+          ]
+        }
+        </script>
+        <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script> 
+</head>
+    
+    
+<body>
+
+    <!--Preloader-->
+    <div id="preloader">
+        <div id="loader" class="loader">
+            <div class="loader-container">
+                <div class="loader-icon"><img src="/assets/img/logo/logo.webp" alt="Preloader"></div>
+            </div>
+        </div>
+    </div>
+    <!--Preloader-einde -->
+
+    <!-- Scroll-top -->
+    <button class="scroll-top scroll-to-target" data-target="html">
+        <i class="fas fa-angle-up"></i>
+    </button>
+
+    <!-- hoofdgedeelte -->
+    <%- include('partials/header') %>
+        <section class="blog-details-area pt-130 pb-130">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="blog-details-wrap">
+                            <div class="blog-item-two inner-blog-item">
+                                <div class="blog-thumb-two blog-details-thumb">
+                                    <img src="/<%= blog.featuredImage %>" alt="<%= blog.title %>">
+                                </div>
+                                <div class="blog-content-two blog-details-content">
+                                    <a href="/blogs" class="tag"><%= blog.categories[0] %></a>
+                                    <div class="blog-meta">
+                                        <ul class="list-wrap">
+                                            <li><i class="fas fa-calendar-alt"></i><%= blog.date.toDateString() %></li>
+                                            <li><i class="far fa-user"></i> Admin</li>
+                                        </ul>
+                                    </div>
+                                    <h2 class="title"><%= blog.title %></h2>
+                                    <!-- Render de HTML-inhoud correct -->
+                                    <p><%- blog.content %></p>
+
+                                    <div class="blog-details-bottom">
+                                        <div class="row align-items-center">
+                                            <div class="col-lg-7">
+                                                <div class="tg-post-tags">
+                                                    <h4 class="tags-title">Tags:</h4>
+                                                    <ul class="list-wrap">
+                                                        <% blog.categories.forEach(category => { %>
+                                                            <li><a href="#"><%= category %></a></li>
+                                                        <% }); %>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <div class="blog-post-social">
+                                                    <ul class="list-wrap">
+                                                        <li><a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:3000/blogs/<%= blog.title.replace(/\s+/g, '-') %>" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                                                        <li><a href="https://twitter.com/intent/tweet?url=http://localhost:3000/blogs/<%= blog.title.replace(/\s+/g, '-') %>" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                                                        <li><a href="https://www.linkedin.com/sharing/share-offsite/?url=http://localhost:3000/blogs/<%= blog.title.replace(/\s+/g, '-') %>" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                                                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog-next-prev">
+                                <div class="post prev-post">
+                                    <a href="#">Vorige<i class="fas fa-chevron-left"></i></a>
+                                </div>
+                                <div class="post next-post">
+                                    <a href="#">Volgende<i class="fas fa-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-8">
+                        <aside class="blog-sidebar">
+                            <!-- Dynamische recente berichten -->
+                            <div class="widget">
+                                <h4 class="widget-title">Recente berichten</h4>
+                                <div class="rc-post-list">
+                                    <% recentPosts.forEach(post => { %>
+                                        <div class="rc-post-item">
+                                            <div class="thumb">
+                                                <a href="/blogs/<%= post.title.replace(/\s+/g, '-') %>"><img src="/<%= post.featuredImage %>" alt="<%= post.title %>"></a>
+                                            </div>
+                                            <div class="content">
+                                                <span class="date"><i class="far fa-calendar-alt"></i><%= post.date.toDateString() %></span>
+                                                <h5 class="title"><a href="/blogs/<%= post.title.replace(/\s+/g, '-') %>"><%= post.title %></a></h5>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                </div>
+                            </div>
+                            <!-- Tags -->
+                            <div class="widget">
+                                <h4 class="widget-title">Tags</h4>
+                                <div class="tag-list-wrap">
+                                    <ul class="list-wrap">
+                                        <% blog.categories.forEach(tag => { %>
+                                            <li><a href="#"><%= tag %></a></li>
+                                        <% }); %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <%- include('partials/blogs') %>
+        <%- include('partials/footer') %>
+    <!-- JS hier -->
+    <script src="/assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="/assets/js/jquery.odometer.min.js"></script>
+    <script src="/assets/js/BeerSlider.js"></script>
+    <script src="/assets/js/jquery.appear.js"></script>
+    <script src="/assets/js/swiper-bundle.min.js"></script>
+    <script src="/assets/js/jarallax.min.js"></script>
+    <script src="/assets/js/slick.min.js"></script>
+    <script src="/assets/js/gsap.js"></script>
+    <script src="/assets/js/ScrollTrigger.js"></script>
+    <script src="/assets/js/SplitText.js"></script>
+    <script src="/assets/js/gsap-animation.js"></script>
+    <script src="/assets/js/tg-cursor.min.js"></script>
+    <script src="/assets/js/wow.min.js"></script>
+    <script src="/assets/js/aos.js"></script>
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
