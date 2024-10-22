@@ -9,10 +9,17 @@
         #canvasContainer {
             border: 2px solid #ddd;
             border-radius: 5px;
-            overflow: hidden;
+            overflow: auto;
             position: relative;
             background-color: #f9f9f9;
-            height: 500px;
+            max-height: 600px;
+        }
+
+        #drawingCanvas {
+            display: block;
+            background: #fff;
+            width: 100%;
+            height: auto;
         }
 
         .tooltip-label {
@@ -23,7 +30,7 @@
             border-radius: 3px;
             font-size: 12px;
             pointer-events: none;
-            transform: translate(-50%, -100%);
+            transform: translate(-50%, -50%);
             white-space: nowrap;
         }
 
@@ -55,23 +62,8 @@
             </div>
         </div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <label for="lineColor" class="form-label">Kleur van annotatielijnen:</label>
-                <input type="color" id="lineColor" value="#FF0000" class="form-control" onchange="drawCanvas()">
-            </div>
-            <div class="col-md-4">
-                <label for="lineWidth" class="form-label">Lijndikte (px):</label>
-                <input type="number" id="lineWidth" class="form-control" min="1" value="2" onchange="drawCanvas()">
-            </div>
-            <div class="col-md-4">
-                <label for="pricePerSquareMeter" class="form-label">Prijs per m² (€):</label>
-                <input type="number" id="pricePerSquareMeter" class="form-control" placeholder="Bijv. 50" min="0" step="0.01" onchange="updateResultSummary()">
-            </div>
-        </div>
-
         <div id="canvasContainer" class="mb-4">
-            <canvas id="drawingCanvas" class="w-100 bg-white"></canvas>
+            <canvas id="drawingCanvas"></canvas>
         </div>
 
         <div class="bg-white p-4 rounded shadow">
@@ -96,9 +88,24 @@
             reader.onload = function (e) {
                 image = new Image();
                 image.onload = function () {
-                    const scaleFactor = Math.min(500 / image.height, 1); // Adjust to fit the canvas
-                    canvas.width = image.width * scaleFactor;
-                    canvas.height = image.height * scaleFactor;
+                    const aspectRatio = image.width / image.height;
+                    const containerWidth = document.getElementById('canvasContainer').clientWidth;
+                    const containerHeight = document.getElementById('canvasContainer').clientHeight;
+
+                    if (image.width > containerWidth) {
+                        canvas.width = containerWidth;
+                        canvas.height = containerWidth / aspectRatio;
+                    } else {
+                        canvas.width = image.width;
+                        canvas.height = image.height;
+                    }
+
+                    if (canvas.height > containerHeight) {
+                        const scaleFactor = containerHeight / canvas.height;
+                        canvas.height = containerHeight;
+                        canvas.width = canvas.width * scaleFactor;
+                    }
+
                     drawCanvas();
                 };
                 image.src = e.target.result;
@@ -108,7 +115,9 @@
 
         function drawCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (image) ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            if (image) {
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            }
             drawAnnotations();
         }
 
@@ -131,8 +140,8 @@
             ctx.beginPath();
             ctx.moveTo(startPoint.x, startPoint.y);
             ctx.lineTo(x, y);
-            ctx.strokeStyle = document.getElementById('lineColor').value;
-            ctx.lineWidth = parseInt(document.getElementById('lineWidth').value);
+            ctx.strokeStyle = document.getElementById('lineColor')?.value || '#FF0000';
+            ctx.lineWidth = parseInt(document.getElementById('lineWidth')?.value || 2);
             ctx.stroke();
             ctx.closePath();
         }
@@ -167,12 +176,15 @@
         }
 
         function drawAnnotations() {
+            const container = document.getElementById('canvasContainer');
+            container.querySelectorAll('.tooltip-label').forEach(el => el.remove());
+
             annotations.forEach((annotation) => {
                 ctx.beginPath();
                 ctx.moveTo(annotation.startPoint.x, annotation.startPoint.y);
                 ctx.lineTo(annotation.endPoint.x, annotation.endPoint.y);
-                ctx.strokeStyle = document.getElementById('lineColor').value;
-                ctx.lineWidth = parseInt(document.getElementById('lineWidth').value);
+                ctx.strokeStyle = document.getElementById('lineColor')?.value || '#FF0000';
+                ctx.lineWidth = parseInt(document.getElementById('lineWidth')?.value || 2);
                 ctx.stroke();
                 ctx.closePath();
 
@@ -184,7 +196,7 @@
                 tooltip.innerText = `${annotation.length} m`;
                 tooltip.style.left = `${midX}px`;
                 tooltip.style.top = `${midY}px`;
-                document.getElementById('canvasContainer').appendChild(tooltip);
+                container.appendChild(tooltip);
             });
         }
 
@@ -221,29 +233,6 @@
             drawCanvas();
             updateAnnotationList();
             updateResultSummary();
-        }
-
-        function setHeightForAll() {
-            const height = parseFloat(document.getElementById('defaultHeight').value);
-            annotations.forEach(annotation => {
-                annotation.height = height;
-            });
-            updateAnnotationList();
-            updateResultSummary();
-        }
-
-        function updateResultSummary() {
-            const pricePerSquareMeter = parseFloat(document.getElementById('pricePerSquareMeter').value) || 0;
-            let totalArea = 0;
-
-            annotations.forEach(annotation => {
-                totalArea += (annotation.length * (annotation.height / 100));
-            });
-
-            const totalCost = (totalArea * pricePerSquareMeter).toFixed(2);
-
-            document.getElementById('resultSummary').innerText = 
-                `Totale oppervlakte: ${totalArea.toFixed(2)} m² - Totale kosten: €${totalCost}`;
         }
 
         canvas.addEventListener('mousedown', startDrawing);

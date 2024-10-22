@@ -90,15 +90,19 @@
         let isDrawing = false;
         let scale = 100;
 
+        document.getElementById('imageUpload').addEventListener('change', loadImage);
+        document.getElementById('scaleInput').addEventListener('input', updateScale);
+        document.getElementById('lineColor').addEventListener('input', drawCanvas);
+        document.getElementById('lineWidth').addEventListener('input', drawCanvas);
+
         function loadImage(event) {
             const file = event.target.files[0];
             const reader = new FileReader();
             reader.onload = function (e) {
                 image = new Image();
                 image.onload = function () {
-                    const scaleFactor = Math.min(500 / image.height, 1); // Adjust to fit the canvas
-                    canvas.width = image.width * scaleFactor;
-                    canvas.height = image.height * scaleFactor;
+                    canvas.width = image.width * 1.5;
+                    canvas.height = image.height * 1.5;
                     drawCanvas();
                 };
                 image.src = e.target.result;
@@ -146,6 +150,7 @@
             const y = (event.clientY - rect.top) * (canvas.height / rect.height);
             const endPoint = { x, y };
 
+            // Calculate distance in pixels
             const lengthInPixels = Math.sqrt(
                 Math.pow(endPoint.x - startPoint.x, 2) +
                 Math.pow(endPoint.y - startPoint.y, 2)
@@ -176,6 +181,7 @@
                 ctx.stroke();
                 ctx.closePath();
 
+                // Draw tooltip near the middle of the line
                 const midX = (annotation.startPoint.x + annotation.endPoint.x) / 2;
                 const midY = (annotation.startPoint.y + annotation.endPoint.y) / 2;
 
