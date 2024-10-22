@@ -2,144 +2,155 @@
     <channel>
         <title><![CDATA[T.H.A Vastgoedonderhoud RSS Feed]]></title>
         <description><![CDATA[Blijf op de hoogte van de laatste updates van T.H.A Vastgoedonderhoud. Wij bieden professionele schilderdiensten en gratis MJOP-software voor vastgoedbeheer in Hoorn, Almere en omstreken. Vraag nu een offerte aan voor schilderwerk of een NEN 2767-conditiemeting.]]></description>
-        <link>https://tha-diensten.nl</link>
+        <link>http://tha-diensten.nl</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sat, 12 Oct 2024 17:24:40 GMT</lastBuildDate>
-        <atom:link href="https://tha-diensten.nl/rss.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Sat, 12 Oct 2024 17:04:30 GMT</pubDate>
+        <lastBuildDate>Tue, 22 Oct 2024 20:58:12 GMT</lastBuildDate>
+        <atom:link href="http://tha-diensten.nl/rss.xml" rel="self" type="application/rss+xml"/>
+        <pubDate>Tue, 22 Oct 2024 20:53:29 GMT</pubDate>
         <language><![CDATA[nl]]></language>
         <dc:creator>THA Vastgoed &amp; Schilderwerk</dc:creator>
-        <atom:link href="https://tha-diensten.nl/rss.xml" rel="self" type="application/rss+xml"/>
+        <atom:link href="http://tha-diensten.nl/rss.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[Volg de regels Laat een MJOP opstellen voor inzicht ]]></title>
+            <description><![CDATA[Veel VvE’s kiezen voor de gemakkelijke weg en reserveren simpelweg de 0,5%, maar dat is vergelijkbaar met blindelings geld sparen zonder te weten waar je op moet rekenen. Zo werkt het ook met VvE-rese]]></description>
+            <link>http://localhost:3000/blogs/Volg-de-regels-Laat-een-MJOP-opstellen-voor-inzicht-</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Volg-de-regels-Laat-een-MJOP-opstellen-voor-inzicht-</guid>
+            <category><![CDATA[MJOP manager]]></category>
+            <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
+            <pubDate>Tue, 22 Oct 2024 16:57:00 GMT</pubDate>
+            <media:content url="http://localhost:3000/uploads%5C1729630691975-contact.jpeg" medium="image" type="image/webp"/>
+            <dc:creator>Thierry Henrich</dc:creator>
+        </item>
         <item>
             <title><![CDATA[Vastgoed Klaarmaken voor Verkoop of Verhuur]]></title>
             <description><![CDATA[Bent u op zoek naar een efficiënte manier om uw vastgoed voor te bereiden voor verkoop of verhuur? THA Vastgoedonderhoud biedt een aanpak die zowel particuliere als zakelijke klanten aanspreekt.]]></description>
-            <link>https://tha-diensten.nl/blogs/Vastgoed-Klaarmaken-voor-Verkoop-of-Verhuur</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Vastgoed-Klaarmaken-voor-Verkoop-of-Verhuur</guid>
+            <link>http://localhost:3000/blogs/Vastgoed-Klaarmaken-voor-Verkoop-of-Verhuur</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Vastgoed-Klaarmaken-voor-Verkoop-of-Verhuur</guid>
             <category><![CDATA[Zakelijk]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Sat, 12 Oct 2024 16:09:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728749416419-u4895251115_Empty_living_room_after_putty_work_on_walls_and_c_6ca0d2a5-1cda-498b-8cfa-9f710af6ee8b_2.webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728749416419-u4895251115_Empty_living_room_after_putty_work_on_walls_and_c_6ca0d2a5-1cda-498b-8cfa-9f710af6ee8b_2.png" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
             <title><![CDATA[Functies van MJOP Manager]]></title>
             <description><![CDATA[Ontdek de uitgebreide functies van MJOP Manager, dé software voor vastgoed- en VvE-beheerders. Automatiseer onderhoudsplanning, beheer inspecties en krijg volledige controle over kosten met onze flexi]]></description>
-            <link>https://tha-diensten.nl/blogs/Functies-van-MJOP-Manager</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Functies-van-MJOP-Manager</guid>
+            <link>http://localhost:3000/blogs/Functies-van-MJOP-Manager</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Functies-van-MJOP-Manager</guid>
             <category><![CDATA[MJOP manager]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Mon, 07 Oct 2024 16:01:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728749354923-MixCollage-05-Sep-20%20(1).webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728749354923-MixCollage-05-Sep-20%20(1).jpg" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
             <title><![CDATA[Kleuren op het kantoor]]></title>
             <description><![CDATA[Ontdek hoe kleuren de sfeer en productiviteit van kantoorruimtes beïnvloeden en hoe de juiste kleurkeuze het welzijn en de creativiteit van werknemers kan stimuleren.]]></description>
-            <link>https://tha-diensten.nl/blogs/Kleuren-op-het-kantoor</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Kleuren-op-het-kantoor</guid>
+            <link>http://localhost:3000/blogs/Kleuren-op-het-kantoor</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Kleuren-op-het-kantoor</guid>
             <category><![CDATA[Zakelijk]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Sun, 01 Sep 2024 16:36:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%2F1728750997259-640-ux-graphic-desig%20(1).webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%2F1728750997259-640-ux-graphic-desig%20(1).jpg" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
-            <title><![CDATA[Hoe THA-Diensten.nl Uw VvE-Beheer Verbetert: Flexibiliteit en Complete Ondersteuning]]></title>
+            <title><![CDATA[Hoe mjop manager Uw VvE Beheer Verbetert Flexibiliteit en Complete Ondersteuning]]></title>
             <description><![CDATA[THA-Diensten.nl biedt flexibele onderhoudsdiensten voor VvE- en vastgoedbeheerders. Van MJOP-beheer en inspecties tot offertecontrole, met volledige ontzorging en gratis MJOP-software voor uw klanten.]]></description>
-            <link>https://tha-diensten.nl/blogs/Hoe-THA-Diensten.nl-Uw-VvE-Beheer-Verbetert%3A-Flexibiliteit-en-Complete-Ondersteuning</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Hoe-THA-Diensten.nl-Uw-VvE-Beheer-Verbetert%3A-Flexibiliteit-en-Complete-Ondersteuning</guid>
+            <link>http://localhost:3000/blogs/Hoe-mjop-manager-Uw-VvE-Beheer-Verbetert-Flexibiliteit-en-Complete-Ondersteuning</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Hoe-mjop-manager-Uw-VvE-Beheer-Verbetert-Flexibiliteit-en-Complete-Ondersteuning</guid>
             <category><![CDATA[MJOP manager]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Sat, 03 Aug 2024 17:22:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728753778798-2%20(1).webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728753778798-2%20(1).png" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
-            <title><![CDATA[Waarom Regelmatig Onderhoud Cruciaal is voor VvE's: Voorkom Hoge Kosten en Verleng de Levensduur van Uw Gebouw]]></title>
+            <title><![CDATA[Waarom Regelmatig Onderhoud Cruciaal is voor VvEs Voorkom Hoge Kosten en Verleng de Levensduur van Uw Gebouw]]></title>
             <description><![CDATA[Regelmatig onderhoud verlengt de levensduur van gebouwen en voorkomt hoge kosten door onverwachte reparaties. Het is cruciaal voor VvE's, omdat het veiligheid, waarde en comfort van het pand behoudt.]]></description>
-            <link>https://tha-diensten.nl/blogs/Waarom-Regelmatig-Onderhoud-Cruciaal-is-voor-VvE&apos;s%3A-Voorkom-Hoge-Kosten-en-Verleng-de-Levensduur-van-Uw-Gebouw</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Waarom-Regelmatig-Onderhoud-Cruciaal-is-voor-VvE&apos;s%3A-Voorkom-Hoge-Kosten-en-Verleng-de-Levensduur-van-Uw-Gebouw</guid>
+            <link>http://localhost:3000/blogs/Waarom-Regelmatig-Onderhoud-Cruciaal-is-voor-VvEs-Voorkom-Hoge-Kosten-en-Verleng-de-Levensduur-van-Uw-Gebouw</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Waarom-Regelmatig-Onderhoud-Cruciaal-is-voor-VvEs-Voorkom-Hoge-Kosten-en-Verleng-de-Levensduur-van-Uw-Gebouw</guid>
             <category><![CDATA[Vve]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Tue, 09 Jul 2024 17:17:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728753480845-Werkzaamheden-Mijnsh%20(1).webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728753480845-Werkzaamheden-Mijnsh%20(1).jpg" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
-            <title><![CDATA[Hoe THA-Diensten.nl VvE-Eigenaren Zekerheid Biedt: Waardebehoud en Gemoedsrust]]></title>
+            <title><![CDATA[Hoe mjop manager VvE Eigenaren Zekerheid Biedt Waardebehoud en Gemoedsrust]]></title>
             <description><![CDATA[THA-Diensten.nl biedt complete en flexibele onderhoudsdiensten voor VvE-eigenaren. Met ons digitale onderhoudsboekje en MJOP Manager-software zorgen we voor transparantie, waarde behoud, en gemoedsrus]]></description>
-            <link>https://tha-diensten.nl/blogs/Hoe-THA-Diensten.nl-VvE-Eigenaren-Zekerheid-Biedt%3A-Waardebehoud-en-Gemoedsrust</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Hoe-THA-Diensten.nl-VvE-Eigenaren-Zekerheid-Biedt%3A-Waardebehoud-en-Gemoedsrust</guid>
+            <link>http://localhost:3000/blogs/Hoe-mjop-manager-VvE-Eigenaren-Zekerheid-Biedt-Waardebehoud-en-Gemoedsrust</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Hoe-mjop-manager-VvE-Eigenaren-Zekerheid-Biedt-Waardebehoud-en-Gemoedsrust</guid>
             <category><![CDATA[MJOP manager]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Sat, 06 Jul 2024 17:24:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728753880796-dyon_van_gerwen2277.webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728753880796-dyon_van_gerwen2277.jpeg" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
             <title><![CDATA[Tarieven schilder]]></title>
             <description><![CDATA[Ontdek geschatte kosten voor diverse woningrenovaties en schilderwerken. Vergelijk tarieven voor verschillende woningtypes. Vraag gratis een persoonlijke offerte aan.]]></description>
-            <link>https://tha-diensten.nl/blogs/Tarieven-schilder</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Tarieven-schilder</guid>
+            <link>http://localhost:3000/blogs/Tarieven-schilder</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Tarieven-schilder</guid>
             <category><![CDATA[Schilderwerk]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Sat, 01 Jun 2024 09:41:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728751320896-banner2.webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728751320896-banner2.jpeg" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
             <title><![CDATA[Ontdek 15 Praktische Schildertips die U Wellicht Over het Hoofd Hebt Gezien]]></title>
             <description><![CDATA[Bent u van plan om zelf aan de slag te gaan met schilderen? Lees dan eerst deze 15 praktische schildertips die u wellicht over het hoofd hebt gezien! Leer alles over voorbereiding, schildertechnieken ]]></description>
-            <link>https://tha-diensten.nl/blogs/Ontdek-15-Praktische-Schildertips-die-U-Wellicht-Over-het-Hoofd-Hebt-Gezien</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Ontdek-15-Praktische-Schildertips-die-U-Wellicht-Over-het-Hoofd-Hebt-Gezien</guid>
+            <link>http://localhost:3000/blogs/Ontdek-15-Praktische-Schildertips-die-U-Wellicht-Over-het-Hoofd-Hebt-Gezien</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Ontdek-15-Praktische-Schildertips-die-U-Wellicht-Over-het-Hoofd-Hebt-Gezien</guid>
             <category><![CDATA[Schilderwerk]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Wed, 01 May 2024 17:15:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728753355116-Ontwerp_zonder_titel%20(1).webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728753355116-Ontwerp_zonder_titel%20(1).png" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
             <title><![CDATA[Tips voor een Goed Onderhouden Gebouw het Hele Jaar Door]]></title>
             <description><![CDATA[Elk seizoen brengt unieke onderhoudsuitdagingen. Met een seizoensgebonden plan houdt uw VvE het gebouw in topconditie, ongeacht het weer. Hier zijn specifieke onderhoudstips per seizoen.]]></description>
-            <link>https://tha-diensten.nl/blogs/Tips-voor-een-Goed-Onderhouden-Gebouw-het-Hele-Jaar-Door</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Tips-voor-een-Goed-Onderhouden-Gebouw-het-Hele-Jaar-Door</guid>
+            <link>http://localhost:3000/blogs/Tips-voor-een-Goed-Onderhouden-Gebouw-het-Hele-Jaar-Door</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Tips-voor-een-Goed-Onderhouden-Gebouw-het-Hele-Jaar-Door</guid>
             <category><![CDATA[Vve]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Sun, 31 Dec 2023 02:23:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728753657677-IMG_1745-e1578830733%20(1).webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728753657677-IMG_1745-e1578830733%20(1).jpg" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
-            <title><![CDATA[Tips en tricks blog: Hoe Buiten kozijnen te schilderen?]]></title>
+            <title><![CDATA[Tips en tricks blog Hoe Buiten kozijnen te schilderen]]></title>
             <description><![CDATA[Leer professionele schildertechnieken van T.H.A Schilderwerk en Vastgoedonderhoud. Ontdek waardevolle tips voor voorbereiding, materiaalkeuze en duurzaam schilderen voor prachtige resultaten.]]></description>
-            <link>https://tha-diensten.nl/blogs/Tips-en-tricks-blog%3A-Hoe-Buiten-kozijnen-te-schilderen%3F</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Tips-en-tricks-blog%3A-Hoe-Buiten-kozijnen-te-schilderen%3F</guid>
+            <link>http://localhost:3000/blogs/Tips-en-tricks-blog-Hoe-Buiten-kozijnen-te-schilderen</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Tips-en-tricks-blog-Hoe-Buiten-kozijnen-te-schilderen</guid>
             <category><![CDATA[Schilderwerk]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Sun, 15 Oct 2023 16:52:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728751972919-IMG_3834_result.webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728751972919-IMG_3834_result.jpeg" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
             <title><![CDATA[Ons schilderwerk bij GGD locaties in Hoorn]]></title>
             <description><![CDATA[Twee GGD-locaties in Hoorn kregen een frisse uitstraling met nieuwe verflaag. Ontdek hoe dit bijdroeg aan verbeterde uitstraling en onderhoud.]]></description>
-            <link>https://tha-diensten.nl/blogs/Ons-schilderwerk-bij-GGD-locaties-in-Hoorn</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Ons-schilderwerk-bij-GGD-locaties-in-Hoorn</guid>
+            <link>http://localhost:3000/blogs/Ons-schilderwerk-bij-GGD-locaties-in-Hoorn</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Ons-schilderwerk-bij-GGD-locaties-in-Hoorn</guid>
             <category><![CDATA[Zakelijk]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Thu, 15 Jun 2023 17:07:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728753155635-Copy_of_20230105_160%20(1).webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728753155635-Copy_of_20230105_160%20(1).jpeg" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
         <item>
             <title><![CDATA[Schilder klus in Hoorn]]></title>
             <description><![CDATA[Ontdek hoe T.H.A Schilderwerk en Vastgoedonderhoud een klant in Hoorn tevreden stelde met vakmanschap en expertise. Van voorbereiding tot eindresultaat in Noord-Holland]]></description>
-            <link>https://tha-diensten.nl/blogs/Schilder-klus-in-Hoorn</link>
-            <guid isPermaLink="false">https://tha-diensten.nl/blogs/Schilder-klus-in-Hoorn</guid>
+            <link>http://localhost:3000/blogs/Schilder-klus-in-Hoorn</link>
+            <guid isPermaLink="false">http://localhost:3000/blogs/Schilder-klus-in-Hoorn</guid>
             <category><![CDATA[Schilderwerk]]></category>
             <dc:creator><![CDATA[Thierry Henrich]]></dc:creator>
             <pubDate>Sun, 12 Mar 2023 17:47:00 GMT</pubDate>
-            <media:content url="https://tha-diensten.nl/uploads%5C1728751701845-28_dienstennl_-schil%20(1).webp" medium="image" type="image/webp"/>
+            <media:content url="http://localhost:3000/uploads%5C1728751701845-28_dienstennl_-schil%20(1).jpeg" medium="image" type="image/webp"/>
             <dc:creator>Thierry Henrich</dc:creator>
         </item>
     </channel>
