@@ -365,53 +365,6 @@ app.post('/scrape-and-update', async (req, res) => {
     }
 });
 
-// Route to search for artists by genre
-app.get('/search-artists', async (req, res) => {
-    const { query, token } = req.query;
-    console.log('Searching artists with genre:', query);
-
-    if (!query || !token) {
-        console.error('Missing query or token');
-        return res.status(400).json({ error: 'Query and token are required.' });
-    }
-
-    try {
-        // Construct the search URL for artists, filtering by genre
-        let artists = [];
-        let nextUrl = `https://api.spotify.com/v1/search?q=genre:${encodeURIComponent(query)}&type=artist&limit=50`;
-
-        // Loop through all pages until there is no more next URL
-        while (nextUrl) {
-            console.log('Fetching artists from:', nextUrl);
-            const response = await fetch(nextUrl, {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const data = await response.json();
-
-            if (data.artists && data.artists.items) {
-                artists = artists.concat(data.artists.items);
-                console.log(`Fetched ${data.artists.items.length} artists, total so far: ${artists.length}`);
-            }
-
-            nextUrl = data.artists.next; // Get the URL for the next page of results
-        }
-
-        // Sort artists by popularity (most popular first)
-        artists.sort((a, b) => b.popularity - a.popularity);
-
-        console.log('Total artists fetched and sorted by popularity:', artists.length);
-        console.log(JSON.stringify(artists))
-        res.json(artists);
-    } catch (error) {
-        console.error('Error fetching artists:', error);
-        res.status(500).send('Error fetching artists');
-    }
-});
-
-
 // Helper functions
 async function fetchWebApi(endpoint, method = 'GET', body = null, token) {
     console.log('Making API request to:', endpoint, 'with method:', method);
@@ -508,8 +461,8 @@ async function updatePlaylistWithTracks(playlistId, tracks, token) {
         console.log(`Adding chunk ${i / chunkSize + 1} with ${uriChunk.length} tracks`);
 
         try {
-            // Send each chunk as a POST request to add tracks instead of replacing them
-            await fetchWebApi(endpoint, 'POST', { uris: uriChunk }, token);
+            // Send each chunk as a PUT request to the Spotify API
+            await fetchWebApi(endpoint, 'PUT', { uris: uriChunk }, token);
             console.log(`Successfully added ${uriChunk.length} tracks to playlist ${playlistId}`);
         } catch (error) {
             console.error('Error adding chunk to playlist:', error);
@@ -519,7 +472,6 @@ async function updatePlaylistWithTracks(playlistId, tracks, token) {
 
     console.log('Updated playlist successfully');
 }
-
 
 
 function removeDuplicates(tracks) {

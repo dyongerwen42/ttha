@@ -403,7 +403,7 @@ app.get('/search-artists', async (req, res) => {
         artists.sort((a, b) => b.popularity - a.popularity);
 
         console.log('Total artists fetched and sorted by popularity:', artists.length);
-        console.log(JSON.stringify(artists))
+        console.log
         res.json(artists);
     } catch (error) {
         console.error('Error fetching artists:', error);

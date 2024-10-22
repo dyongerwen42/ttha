@@ -232,38 +232,29 @@
         }
     
         async function searchItems() {
-    const query = document.getElementById('query').value.trim();
-    const searchType = document.getElementById('searchType').value; // Get the selected search type
-    loadingSearch.classList.remove('hidden');
-
-    try {
-        let endpoint;
-        // Define the endpoint based on the selected search type
-        if (searchType === 'playlists') {
-            endpoint = `http://localhost:8888/search?query=${query}&type=playlist&token=${accessToken}`;
-        } else if (searchType === 'artists') {
-            endpoint = `http://localhost:8888/search-artists?query=${query}&token=${accessToken}`;
-        } else {
-            console.error('Invalid search type selected');
-            return;
+            const query = document.getElementById('query').value.trim();
+            const searchType = document.getElementById('searchType').value; // Get the selected search type
+            loadingSearch.classList.remove('hidden');
+    
+            try {
+                let endpoint = `http://localhost:8888/search?query=${query}&type=${searchType}&token=${accessToken}`;
+    
+                console.log(`Searching for ${searchType}: ${query}`);
+                const response = await fetch(endpoint);
+                const results = await response.json();
+    
+                if (searchType === 'playlists') {
+                    displayPlaylists(results);
+                } else if (searchType === 'artists') {
+                    displayArtists(results);
+                }
+            } catch (error) {
+                console.error('Error during search:', error);
+            } finally {
+                loadingSearch.classList.add('hidden');
+            }
         }
-
-        console.log(`Searching for ${searchType}: ${query}`);
-        const response = await fetch(endpoint);
-        const results = await response.json();
-
-        if (searchType === 'playlists') {
-            displayPlaylists(results);
-        } else if (searchType === 'artists') {
-            displayArtists(results);
-        }
-    } catch (error) {
-        console.error('Error during search:', error);
-    } finally {
-        loadingSearch.classList.add('hidden');
-    }
-}
-
+    
         function displayPlaylists(playlists) {
             playlistsContainer.innerHTML = '';
             playlists.forEach(playlist => {

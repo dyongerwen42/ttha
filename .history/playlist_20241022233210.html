@@ -50,67 +50,30 @@
         </div>
 
         <!-- Step 2: Search Playlists -->
-       <!-- Step 2: Search Playlists or Artists by Genre -->
-<div id="step2" class="step hidden bg-gradient-to-r from-gray-800 to-gray-700 rounded-3xl p-8 shadow-2xl">
-    <h2 class="text-2xl font-bold mb-6 text-center text-white">Step 2: Search Playlists or Artists</h2>
-    <div class="space-y-4">
-        <!-- Input field for the search query -->
-        <input type="text" id="query" placeholder="Enter Genre or Artist Name" 
-               class="w-full p-4 rounded-xl bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-green-500 transition duration-300">
-        
-        <!-- Dropdown for selecting search type -->
-        <div class="flex items-center space-x-4">
-            <label for="searchType" class="text-white">Search for:</label>
-            <select id="searchType" 
-                    class="w-1/2 p-3 rounded-xl bg-gray-800 text-white focus:outline-none focus:ring-4 focus:ring-green-500 transition duration-300">
-                <option value="playlists">Playlists</option>
-                <option value="artists">Artists by Genre</option>
-            </select>
+        <div id="step2" class="step hidden bg-gradient-to-r from-gray-800 to-gray-700 rounded-3xl p-8 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-center">Step 2: Search Playlists</h2>
+            <div class="space-y-4">
+                <input type="text" id="query" placeholder="Enter Genre or Subgenre" 
+                       class="w-full p-4 rounded-xl bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-green-500 transition duration-300">
+                <button id="searchPlaylists" 
+                        class="spotify-green w-full py-4 rounded-xl text-black font-bold text-lg tracking-wide shadow-lg transform hover:scale-105 transition-transform hover:shadow-xl">
+                    Search Playlists
+                </button>
+            </div>
+            <div id="loadingSearch" class="hidden flex justify-center mt-6"><div class="loading-spinner"></div></div>
         </div>
 
-        <!-- Search button -->
-        <button id="searchButton" 
-                class="spotify-green w-full py-4 rounded-xl text-black font-bold text-lg tracking-wide shadow-lg transform hover:scale-105 transition-transform hover:shadow-xl">
-            Search
-        </button>
-    </div>
-
-    <!-- Loading indicator -->
-    <div id="loadingSearch" class="hidden flex justify-center mt-6">
-        <div class="loading-spinner"></div>
-    </div>
-</div>
-
-
         <!-- Step 3: Select Playlists -->
-        <div id="step3" class="step hidden bg-gradient-to-r from-gray-900 to-gray-700 rounded-3xl p-8 shadow-2xl">
-            <h2 class="text-3xl font-bold mb-6 text-center text-white">Step 3: Select Playlists</h2>
-            <div class="overflow-y-auto max-h-[70vh] rounded-lg border border-gray-600 p-4 bg-gray-800">
-                <div id="playlists" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Example playlist item with checkbox -->
-                    <label class="relative flex flex-col items-center bg-gray-700 p-6 rounded-xl shadow-lg transition hover:bg-gray-600 cursor-pointer">
-                        <input type="checkbox" class="absolute opacity-0 h-0 w-0 peer" />
-                        <div class="flex flex-col items-center gap-4">
-                            <div class="flex items-center justify-center w-6 h-6 border-2 border-gray-400 rounded-md bg-gray-800 peer-checked:bg-spotify-green peer-checked:border-spotify-green transition">
-                                <svg class="hidden w-4 h-4 text-white peer-checked:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 13l4 4L19 7" />
-                                </svg>
-                            </div>
-                            <span class="text-white text-lg font-medium">Playlist Name</span>
-                        </div>
-                        <!-- Outline when selected -->
-                        <div class="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-spotify-green transition"></div>
-                    </label>
-                    <!-- Repeat similar blocks for each playlist -->
-                </div>
+        <div id="step3" class="step hidden bg-gradient-to-r from-gray-800 to-gray-700 rounded-3xl p-8 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-center">Step 3: Select Playlists</h2>
+            <div class="overflow-y-auto h-[90vh] rounded-lg border border-gray-600 p-4 bg-gray-900">
+                <div id="playlists" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4"></div>
             </div>
             <button id="nextToStep4" 
-                    class="spotify-green w-full py-4 rounded-lg text-gray-900 font-semibold text-lg tracking-wide shadow-lg mt-6 transition transform hover:scale-105 hover:shadow-2xl hidden">
+                    class="spotify-green w-full py-4 rounded-xl text-black font-bold text-lg tracking-wide shadow-lg mt-6 transform hover:scale-105 transition-transform hover:shadow-xl hidden">
                 Next
             </button>
         </div>
-        
-        
         
 
         <!-- Step 4: Create or Update Playlist -->
@@ -165,7 +128,6 @@
     <script>
         const authBtn = document.getElementById('authBtn');
         const searchPlaylistsBtn = document.getElementById('searchPlaylists');
-        const searchButton = document.getElementById('searchButton'); // Updated search button ID
         const scrapeAndAddBtn = document.getElementById('scrapeAndAdd');
         const nextToStep4Btn = document.getElementById('nextToStep4');
         const loadingSearch = document.getElementById('loadingSearch');
@@ -218,7 +180,7 @@
     
         if (accessToken) {
             goToStep(step2);
-            searchButton.addEventListener('click', searchItems); // Updated function to search both playlists and artists
+            searchPlaylistsBtn.addEventListener('click', searchPlaylists);
             scrapeAndAddBtn.addEventListener('click', scrapeAndAddTracks);
             nextToStep4Btn.addEventListener('click', () => goToStep(step4));
             loadUserPlaylists();
@@ -231,39 +193,21 @@
             step.classList.remove('hidden');
         }
     
-        async function searchItems() {
-    const query = document.getElementById('query').value.trim();
-    const searchType = document.getElementById('searchType').value; // Get the selected search type
-    loadingSearch.classList.remove('hidden');
-
-    try {
-        let endpoint;
-        // Define the endpoint based on the selected search type
-        if (searchType === 'playlists') {
-            endpoint = `http://localhost:8888/search?query=${query}&type=playlist&token=${accessToken}`;
-        } else if (searchType === 'artists') {
-            endpoint = `http://localhost:8888/search-artists?query=${query}&token=${accessToken}`;
-        } else {
-            console.error('Invalid search type selected');
-            return;
+        async function searchPlaylists() {
+            const query = document.getElementById('query').value;
+            loadingSearch.classList.remove('hidden');
+    
+            try {
+                const response = await fetch(`http://localhost:8888/search?query=${query}&token=${accessToken}`);
+                const playlists = await response.json();
+                displayPlaylists(playlists);
+            } catch (error) {
+                console.error('Error searching playlists:', error);
+            } finally {
+                loadingSearch.classList.add('hidden');
+            }
         }
-
-        console.log(`Searching for ${searchType}: ${query}`);
-        const response = await fetch(endpoint);
-        const results = await response.json();
-
-        if (searchType === 'playlists') {
-            displayPlaylists(results);
-        } else if (searchType === 'artists') {
-            displayArtists(results);
-        }
-    } catch (error) {
-        console.error('Error during search:', error);
-    } finally {
-        loadingSearch.classList.add('hidden');
-    }
-}
-
+    
         function displayPlaylists(playlists) {
             playlistsContainer.innerHTML = '';
             playlists.forEach(playlist => {
@@ -283,6 +227,7 @@
             nextToStep4Btn.classList.remove('hidden');
             goToStep(step3);
     
+            // Add event listeners for the view tracks buttons
             document.querySelectorAll('.view-tracks-btn').forEach(button => {
                 button.addEventListener('click', async () => {
                     const playlistId = button.getAttribute('data-id');
@@ -291,36 +236,9 @@
             });
         }
     
-        function displayArtists(artists) {
-            playlistsContainer.innerHTML = '';
-            artists.forEach(artist => {
-                const div = document.createElement('div');
-                div.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'flex', 'flex-col', 'items-center');
-                div.innerHTML = `
-                    <img src="${artist.images[0]?.url || 'https://via.placeholder.com/150'}" class="w-32 h-32 mb-2 rounded-lg">
-                    <h3 class="text-center text-white font-semibold">${artist.name}</h3>
-                    <p class="text-gray-400">Genre: ${artist.genres.join(', ')}</p>
-                    <button class="spotify-green mt-2 px-4 py-2 rounded text-black font-bold view-tracks-btn" 
-                            data-id="${artist.id}">
-                        View Top Tracks
-                    </button>
-                `;
-                playlistsContainer.appendChild(div);
-            });
-            nextToStep4Btn.classList.remove('hidden');
-            goToStep(step3);
-    
-            document.querySelectorAll('.view-tracks-btn').forEach(button => {
-                button.addEventListener('click', async () => {
-                    const artistId = button.getAttribute('data-id');
-                    await fetchAndDisplayTopTracks(artistId);
-                });
-            });
-        }
-    
-        async function fetchAndDisplayTopTracks(artistId) {
+        async function fetchAndDisplayTracks(playlistId) {
             try {
-                const response = await fetch(`http://localhost:8888/artist-top-tracks?artistId=${artistId}&token=${accessToken}`);
+                const response = await fetch(`http://localhost:8888/playlist-tracks?playlistId=${playlistId}&token=${accessToken}`);
                 const tracks = await response.json();
                 modalTracks.innerHTML = tracks.map(track => `
                     <div class="bg-gray-700 p-4 rounded-lg">
@@ -336,7 +254,7 @@
     
         closeModal.addEventListener('click', () => {
             tracksModal.classList.add('hidden');
-            modalTracks.innerHTML = '';
+            modalTracks.innerHTML = ''; // Clear previous content when closed
         });
     
         async function loadUserPlaylists() {
@@ -347,6 +265,41 @@
             } catch (error) {
                 console.error('Error loading user playlists:', error);
             }
+        }
+    
+        function displayUserPlaylists(playlists) {
+            userPlaylistsContainer.innerHTML = '';
+            if (!playlists || playlists.length === 0) {
+                userPlaylistsContainer.innerHTML = '<p class="text-center text-gray-400">No playlists available.</p>';
+                return;
+            }
+            playlists.forEach((playlist, index) => {
+                const imageUrl = playlist.images && playlist.images[0]?.url || 'https://via.placeholder.com/150';
+                const div = document.createElement('div');
+                div.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'flex', 'flex-col', 'items-center', 'mb-2');
+                div.innerHTML = `
+                    <img src="${imageUrl}" class="w-24 h-24 mb-2 rounded-lg" alt="${playlist.name}">
+                    <h3 class="text-center text-white font-semibold">${playlist.name}</h3>
+                    <p class="text-gray-400 text-center mb-2">${playlist.description || 'No description available.'}</p>
+                    <button class="spotify-green px-4 py-2 rounded text-black font-bold mt-2 select-playlist-btn" 
+                        data-id="${playlist.id}" 
+                        data-name="${playlist.name}" 
+                        data-description="${playlist.description || ''}">
+                        Select
+                    </button>
+                `;
+                userPlaylistsContainer.appendChild(div);
+            });
+            document.querySelectorAll('.select-playlist-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const playlistId = button.getAttribute('data-id');
+                    const playlistName = button.getAttribute('data-name');
+                    const playlistDescription = button.getAttribute('data-description');
+                    document.getElementById('playlistName').value = playlistName;
+                    document.getElementById('playlistDescription').value = playlistDescription;
+                    document.getElementById('playlistId').value = playlistId;
+                });
+            });
         }
     
         async function scrapeAndAddTracks() {
@@ -411,7 +364,6 @@
             output.classList.remove('hidden');
         }
     </script>
-    
     
 </body>
 </html>

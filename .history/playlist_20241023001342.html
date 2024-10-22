@@ -165,7 +165,6 @@
     <script>
         const authBtn = document.getElementById('authBtn');
         const searchPlaylistsBtn = document.getElementById('searchPlaylists');
-        const searchButton = document.getElementById('searchButton'); // Updated search button ID
         const scrapeAndAddBtn = document.getElementById('scrapeAndAdd');
         const nextToStep4Btn = document.getElementById('nextToStep4');
         const loadingSearch = document.getElementById('loadingSearch');
@@ -218,7 +217,7 @@
     
         if (accessToken) {
             goToStep(step2);
-            searchButton.addEventListener('click', searchItems); // Updated function to search both playlists and artists
+            searchPlaylistsBtn.addEventListener('click', searchPlaylists);
             scrapeAndAddBtn.addEventListener('click', scrapeAndAddTracks);
             nextToStep4Btn.addEventListener('click', () => goToStep(step4));
             loadUserPlaylists();
@@ -231,39 +230,21 @@
             step.classList.remove('hidden');
         }
     
-        async function searchItems() {
-    const query = document.getElementById('query').value.trim();
-    const searchType = document.getElementById('searchType').value; // Get the selected search type
-    loadingSearch.classList.remove('hidden');
-
-    try {
-        let endpoint;
-        // Define the endpoint based on the selected search type
-        if (searchType === 'playlists') {
-            endpoint = `http://localhost:8888/search?query=${query}&type=playlist&token=${accessToken}`;
-        } else if (searchType === 'artists') {
-            endpoint = `http://localhost:8888/search-artists?query=${query}&token=${accessToken}`;
-        } else {
-            console.error('Invalid search type selected');
-            return;
+        async function searchPlaylists() {
+            const query = document.getElementById('query').value;
+            loadingSearch.classList.remove('hidden');
+    
+            try {
+                const response = await fetch(`http://localhost:8888/search?query=${query}&token=${accessToken}`);
+                const playlists = await response.json();
+                displayPlaylists(playlists);
+            } catch (error) {
+                console.error('Error searching playlists:', error);
+            } finally {
+                loadingSearch.classList.add('hidden');
+            }
         }
-
-        console.log(`Searching for ${searchType}: ${query}`);
-        const response = await fetch(endpoint);
-        const results = await response.json();
-
-        if (searchType === 'playlists') {
-            displayPlaylists(results);
-        } else if (searchType === 'artists') {
-            displayArtists(results);
-        }
-    } catch (error) {
-        console.error('Error during search:', error);
-    } finally {
-        loadingSearch.classList.add('hidden');
-    }
-}
-
+    
         function displayPlaylists(playlists) {
             playlistsContainer.innerHTML = '';
             playlists.forEach(playlist => {
@@ -283,6 +264,7 @@
             nextToStep4Btn.classList.remove('hidden');
             goToStep(step3);
     
+            // Add event listeners for the view tracks buttons
             document.querySelectorAll('.view-tracks-btn').forEach(button => {
                 button.addEventListener('click', async () => {
                     const playlistId = button.getAttribute('data-id');
@@ -291,36 +273,9 @@
             });
         }
     
-        function displayArtists(artists) {
-            playlistsContainer.innerHTML = '';
-            artists.forEach(artist => {
-                const div = document.createElement('div');
-                div.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'flex', 'flex-col', 'items-center');
-                div.innerHTML = `
-                    <img src="${artist.images[0]?.url || 'https://via.placeholder.com/150'}" class="w-32 h-32 mb-2 rounded-lg">
-                    <h3 class="text-center text-white font-semibold">${artist.name}</h3>
-                    <p class="text-gray-400">Genre: ${artist.genres.join(', ')}</p>
-                    <button class="spotify-green mt-2 px-4 py-2 rounded text-black font-bold view-tracks-btn" 
-                            data-id="${artist.id}">
-                        View Top Tracks
-                    </button>
-                `;
-                playlistsContainer.appendChild(div);
-            });
-            nextToStep4Btn.classList.remove('hidden');
-            goToStep(step3);
-    
-            document.querySelectorAll('.view-tracks-btn').forEach(button => {
-                button.addEventListener('click', async () => {
-                    const artistId = button.getAttribute('data-id');
-                    await fetchAndDisplayTopTracks(artistId);
-                });
-            });
-        }
-    
-        async function fetchAndDisplayTopTracks(artistId) {
+        async function fetchAndDisplayTracks(playlistId) {
             try {
-                const response = await fetch(`http://localhost:8888/artist-top-tracks?artistId=${artistId}&token=${accessToken}`);
+                const response = await fetch(`http://localhost:8888/playlist-tracks?playlistId=${playlistId}&token=${accessToken}`);
                 const tracks = await response.json();
                 modalTracks.innerHTML = tracks.map(track => `
                     <div class="bg-gray-700 p-4 rounded-lg">
@@ -336,7 +291,7 @@
     
         closeModal.addEventListener('click', () => {
             tracksModal.classList.add('hidden');
-            modalTracks.innerHTML = '';
+            modalTracks.innerHTML = ''; // Clear previous content when closed
         });
     
         async function loadUserPlaylists() {
@@ -347,6 +302,41 @@
             } catch (error) {
                 console.error('Error loading user playlists:', error);
             }
+        }
+    
+        function displayUserPlaylists(playlists) {
+            userPlaylistsContainer.innerHTML = '';
+            if (!playlists || playlists.length === 0) {
+                userPlaylistsContainer.innerHTML = '<p class="text-center text-gray-400">No playlists available.</p>';
+                return;
+            }
+            playlists.forEach((playlist, index) => {
+                const imageUrl = playlist.images && playlist.images[0]?.url || 'https://via.placeholder.com/150';
+                const div = document.createElement('div');
+                div.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'flex', 'flex-col', 'items-center', 'mb-2');
+                div.innerHTML = `
+                    <img src="${imageUrl}" class="w-24 h-24 mb-2 rounded-lg" alt="${playlist.name}">
+                    <h3 class="text-center text-white font-semibold">${playlist.name}</h3>
+                    <p class="text-gray-400 text-center mb-2">${playlist.description || 'No description available.'}</p>
+                    <button class="spotify-green px-4 py-2 rounded text-black font-bold mt-2 select-playlist-btn" 
+                        data-id="${playlist.id}" 
+                        data-name="${playlist.name}" 
+                        data-description="${playlist.description || ''}">
+                        Select
+                    </button>
+                `;
+                userPlaylistsContainer.appendChild(div);
+            });
+            document.querySelectorAll('.select-playlist-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const playlistId = button.getAttribute('data-id');
+                    const playlistName = button.getAttribute('data-name');
+                    const playlistDescription = button.getAttribute('data-description');
+                    document.getElementById('playlistName').value = playlistName;
+                    document.getElementById('playlistDescription').value = playlistDescription;
+                    document.getElementById('playlistId').value = playlistId;
+                });
+            });
         }
     
         async function scrapeAndAddTracks() {
@@ -411,7 +401,6 @@
             output.classList.remove('hidden');
         }
     </script>
-    
     
 </body>
 </html>
