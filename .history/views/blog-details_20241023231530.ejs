@@ -1,6 +1,7 @@
 <!doctype html>
 <html class="no-js" lang="nl">
     <head>
+        <base href="http://localhost:3000/">
 
         <meta charset="utf-8" />
     <%- include('partials/json') %>
@@ -9,8 +10,7 @@
         <meta name="description" content="<%= blog.seoDescription %>">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="keywords" content="<%= blog.seoKeywords.join(', ') %>">
-        <base href="https://tha-diensten.nl/">
-
+    
         <!-- Canonical Link to Avoid Duplicate Content Issues -->
         <link rel="canonical" href="https://tha-diensten.nl/blogs/<%= blog.title.replace(/\s+/g, '-') %>"/>
     
