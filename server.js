@@ -15,7 +15,7 @@ const axios = require("axios");
 // Initialize Express app
 const app = express();
 const PORT = 3000;
-
+const EMAIL_PASS = ""
 // Define Mongoose schema and model for contact form submissions
 const contactSchema = new mongoose.Schema(
   {
@@ -295,7 +295,7 @@ app.post("/submit-contact", upload.single("file"), async (req, res) => {
       service: "gmail",
       auth: {
         user: "contact@tha-diensten.nl", // replace with your email
-        pass: "", // replace with your email password or app password
+        pass: EMAIL_PASS, // replace with your email password or app password
       },
     });
 
@@ -358,7 +358,7 @@ app.post("/request-demo", upload.single("file"), async (req, res) => {
       service: "gmail",
       auth: {
         user: "contact@tha-diensten.nl", // Vervang dit met jouw e-mailadres
-        pass: "", // Vervang dit met jouw e-mailwachtwoord of app-wachtwoord
+        pass: EMAIL_PASS, // Vervang dit met jouw e-mailwachtwoord of app-wachtwoord
       },
     });
 
@@ -840,8 +840,8 @@ app.post('/submit-prijsvraag', upload.single('photo'), async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER || "contact@tha-diensten.nl",
-        pass: process.env.EMAIL_PASS || "YOUR_EMAIL_PASSWORD",
+        user:  "contact@tha-diensten.nl",
+        pass: EMAIL_PASS,
       },
     });
 
