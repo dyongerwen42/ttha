@@ -10,11 +10,44 @@ const seoSecurityHeaders = require("./seoSecurityHeaders"); // Import the middle
 const nodemailer = require("nodemailer");
 const axios = require("axios");
 
-// Apply the SEO and security headers middleware globally
-
 // Initialize Express app
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// Set up EJS as the templating engine
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// Apply compression and SEO/security headers middleware
+app.use(compression());
+app.use(seoSecurityHeaders);
+
+// Middleware to serve static files with caching
+app.use(
+  express.static("public", {
+    maxAge: "1y", // Cache static assets for 1 year
+    etag: false, // Disable etag for performance
+  })
+);
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve uploaded files
+
+// Middleware for parsing form data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Connect to MongoDB
+mongoose.connect(
+  "mongodb+srv://thavastgoedonderhoudwebsite:421142Dcdc@cluster0.069us.mongodb.net/blogdb?retryWrites=true&w=majority&appName=Cluster0",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+)
+.then(() => console.log("MongoDB connected successfully to blogdb"))
+.catch((err) => {
+  console.error("MongoDB connection error:", err);
+  process.exit(1);
+});
 
 // Define Mongoose schema and model for contact form submissions
 const contactSchema = new mongoose.Schema(
@@ -31,32 +64,7 @@ const contactSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-
-// Set up EJS as the templating engine
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(compression());
-app.use(seoSecurityHeaders);
-app.use(
-  express.static("public", {
-    maxAge: "1y", // Cache static assets for 1 year
-    etag: false, // Disable etag for performance
-  })
-);
-// Connect to MongoDB
-mongoose.connect(
-    "mongodb+srv://thavastgoedonderhoudwebsite:421142Dcdc@cluster0.069us.mongodb.net/blogdb?retryWrites=true&w=majority&appName=Cluster0",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
-  .then(() => console.log("MongoDB connected successfully to blogdb"))
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-    process.exit(1);
-  });
-  
+const Contact = mongoose.model("Contact", contactSchema);
 
 // Define Blog Schema and Model
 const blogSchema = new mongoose.Schema(
@@ -78,11 +86,7 @@ const blogSchema = new mongoose.Schema(
 
 const Blog = mongoose.model("Blog", blogSchema);
 
-// Middleware to serve static files
-app.use("/assets", express.static(path.join(__dirname, "public"))); // Change 'assets' to 'public' folder
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Change 'assets' to 'public' folder
-
-// Set up multer for image upload
+// Set up multer for general image upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -93,17 +97,38 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Middleware for parsing form data
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// Set up multer for prijsvraag image upload
+const prijsvraagStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/prijsvraag/"); // Ensure this directory exists
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const prijsvraagUpload = multer({ 
+  storage: prijsvraagStorage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Max 5MB
+  fileFilter: function (req, file, cb) {
+    const fileTypes = /jpeg|jpg|png|gif/;
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = fileTypes.test(file.mimetype);
+    if(mimetype && extname){
+        return cb(null, true);
+    } else {
+        cb(new Error('Error: Alleen afbeeldingen zijn toegestaan!'));
+    }
+  }
+});
 
 // RSS Base Info
 const rssBaseInfo = {
   title: "T.H.A Vastgoedonderhoud RSS Feed",
   description:
     "Blijf op de hoogte van de laatste updates van T.H.A Vastgoedonderhoud. Wij bieden professionele schilderdiensten en gratis MJOP-software voor vastgoedbeheer in Hoorn, Almere en omstreken. Vraag nu een offerte aan voor schilderwerk of een NEN 2767-conditiemeting.",
-  feed_url: "http://tha-diensten.nl/rss.xml", // Corrected domain for the RSS feed
-  site_url: "http://tha-diensten.nl", // Corrected domain for the site
+  feed_url: "https://tha-diensten.nl/rss.xml", // Updated to use HTTPS and correct domain
+  site_url: "https://tha-diensten.nl", // Updated to use HTTPS and correct domain
   language: "nl",
   pubDate: new Date(),
   lastBuildDate: new Date(),
@@ -176,10 +201,10 @@ const generateRSSFeed = async () => {
 
   // Add each blog to the RSS feed
   blogs.forEach((blog) => {
-    const blogUrl = `http://localhost:3000/blogs/${encodeURIComponent(
-      blog.title.replace(/\s+/g, "-")
+    const blogUrl = `${rssBaseInfo.site_url}/blogs/${encodeURIComponent(
+      slugify(blog.title)
     )}`;
-    const featuredImageUrl = `http://localhost:3000/${encodeURIComponent(
+    const featuredImageUrl = `${rssBaseInfo.site_url}/${encodeURIComponent(
       blog.featuredImage
     )}`; // Encode the image URL
 
@@ -212,6 +237,15 @@ const generateRSSFeed = async () => {
   fs.writeFileSync("public/rss.xml", rssXML);
 };
 
+// Utility function to slugify titles
+const slugify = (title) => {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+    .replace(/^-|-$/g, ''); // Remove hyphens from start and end
+};
+
 // Route to create a new blog post
 app.post("/create-blog", upload.single("featured_image"), async (req, res) => {
   try {
@@ -238,9 +272,9 @@ app.post("/create-blog", upload.single("featured_image"), async (req, res) => {
       date: new Date(date),
       categories: categories.split(",").map((cat) => cat.trim()),
       visibility,
-      seoTitle: title, // Use blog title for SEO
-      seoDescription: description, // Use blog description for SEO
-      seoKeywords: seo_keywords.split(",").map((keyword) => keyword.trim()),
+      seoTitle: seo_title || title, // Use provided SEO title or fallback to blog title
+      seoDescription: seo_description || description, // Use provided SEO description or fallback to blog description
+      seoKeywords: seo_keywords ? seo_keywords.split(",").map((keyword) => keyword.trim()) : [],
     });
 
     await blog.save();
@@ -255,7 +289,7 @@ app.post("/create-blog", upload.single("featured_image"), async (req, res) => {
   }
 });
 
-// Endpoint to handle form submissions
+// Endpoint to handle contact form submissions
 app.post("/submit-contact", upload.single("file"), async (req, res) => {
   console.log("Received contact form submission");
   try {
@@ -290,12 +324,26 @@ app.post("/submit-contact", upload.single("file"), async (req, res) => {
             .join("\n")
         : "No dynamic fields provided";
 
+    // Save contact submission to database
+    const contact = new Contact({
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      location: req.body.location,
+      execution_date: req.body.execution_date,
+      comments: req.body.comments,
+      file: req.file ? req.file.path : "",
+      dynamic_fields: dynamicFields,
+    });
+
+    await contact.save();
+
     // Set up Nodemailer transport
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: "contact@tha-diensten.nl", // replace with your email
-        pass: "", // replace with your email password or app password
+        pass: "YOUR_EMAIL_PASSWORD", // replace with your email password or app password
       },
     });
 
@@ -337,7 +385,6 @@ ${dynamicFieldsText}`,
     });
   } catch (error) {
     console.error("Error occurred while processing the form:", error);
-
     res
       .status(500)
       .send({
@@ -348,38 +395,42 @@ ${dynamicFieldsText}`,
   }
 });
 
+// Endpoint to handle demo requests
 app.post("/request-demo", upload.single("file"), async (req, res) => {
   console.log("Received demo request form submission");
   try {
     const { name, email, phone, company, message, preferredDate } = req.body;
 
-    // Stel de Nodemailer transport in
+    // Save demo request to database (optional)
+    // You can define a separate schema and model if needed
+
+    // Set up Nodemailer transport
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "contact@tha-diensten.nl", // Vervang dit met jouw e-mailadres
-        pass: "", // Vervang dit met jouw e-mailwachtwoord of app-wachtwoord
+        user: "contact@tha-diensten.nl", // replace with your email
+        pass: "YOUR_EMAIL_PASSWORD", // replace with your email password or app password
       },
     });
 
-    // Stel de e-mailinhoud in
+    // Prepare the email
     const mailOptions = {
       from: "demo@tha-diensten.nl",
-      to: "contact@tha-diensten.nl", // Vervang dit met het ontvanger e-mailadres
+      to: "contact@tha-diensten.nl", // replace with the recipient email
       subject: "Nieuwe Demo Aanvraag",
       text: `Er is een nieuwe demo aanvraag ontvangen:
   
-  Naam: ${name}
-  E-mail: ${email}
-  Telefoon: ${phone}
-  Bedrijf/VvE: ${company}
-  Voorkeursdatum voor demo: ${preferredDate}
-  Bericht: ${message}
-  Bestand: ${req.file ? req.file.path : "Geen bestand geüpload"}`,
+Naam: ${name}
+E-mail: ${email}
+Telefoon: ${phone}
+Bedrijf/VvE: ${company}
+Voorkeursdatum voor demo: ${preferredDate}
+Bericht: ${message}
+Bestand: ${req.file ? req.file.path : "Geen bestand geüpload"}`,
       attachments: req.file ? [{ path: req.file.path }] : [],
     };
 
-    // Verstuur de e-mail
+    // Send the email
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error("Fout bij het verzenden van de e-mail:", error);
@@ -420,127 +471,122 @@ app.get("/rss.xml", (req, res) => {
   res.sendFile(path.join(__dirname, "public/rss.xml"));
 });
 
-app.get("/behangen", async (req, res) => {
+// Category-specific routes
+const categories = [
+  "behangen",
+  "binnenschilderwerk",
+  "buitenschilderwerk",
+  "spuitwerk",
+  "timmerwerk",
+  "dakreiniging",
+  "nen2767",
+  "vve",
+  "mjop-manager",
+  "wiezijnwij",
+  "reiniging",
+  "diensten",
+  "zakelijk",
+  "beglazing",
+  "schilderbedrijf-hoorn",
+  "schilderbedrijf",
+];
+
+categories.forEach((category) => {
+  app.get(`/${category}`, async (req, res) => {
+    try {
+      const blogs = await getBlogs(category.charAt(0).toUpperCase() + category.slice(1));
+      res.render(category, { blogs });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(`An error occurred while retrieving ${category} blogs.`);
+    }
+  });
+});
+
+// Route to render the Prijsvraag form
+app.get("/prijsvraag", (req, res) => {
+  res.render("prijsvraag"); // Ensure 'prijsvraag.ejs' exists in the 'views' directory
+});
+
+// Route to handle Prijsvraag form submissions
+app.post("/submit-prijsvraag", prijsvraagUpload.single("photo"), async (req, res) => {
+  console.log("Received prijsvraag form submission");
   try {
-    const blogs = await Blog.find({
-      categories: "Schilderwerk",
-      visibility: "published",
-    })
-      .sort({ date: -1 })
-      .limit(3);
+    const { name, email, address } = req.body;
+    const photo = req.file;
 
-    res.render("behangen", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving Behangen blogs.");
-  }
-});
-// Serve sitemap.xml
-app.get("/sitemap.xml", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "sitemap.xml"));
-});
-app.get("/sitemap_old.xml", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "sitemap_old.xml"));
-});
-app.get("/robots.txt", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "robots.txt"));
-});
-
-app.get("/binnenschilderwerk", async (req, res) => {
-  try {
-    const blogs = await Blog.find({
-      categories: "Schilderwerk",
-      visibility: "published",
-    })
-      .sort({ date: -1 })
-      .limit(3);
-
-    res.render("binnenschilderwerk", { blogs });
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .send("An error occurred while retrieving Binnenschilderwerk blogs.");
-  }
-});
-
-app.get("/buitenschilderwerk", async (req, res) => {
-  try {
-    const blogs = await Blog.find({
-      categories: "Schilderwerk",
-      visibility: "published",
-    })
-      .sort({ date: -1 })
-      .limit(3);
-
-    res.render("buitenschilderwerk", { blogs });
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .send("An error occurred while retrieving Buitenschilderwerk blogs.");
-  }
-});
-
-app.get("/spuitwerk", async (req, res) => {
-  try {
-    const blogs = await Blog.find({
-      categories: "Schilderwerk",
-      visibility: "published",
-    })
-      .sort({ date: -1 })
-      .limit(3);
-
-    res.render("spuitwerk", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving Spuitwerk blogs.");
-  }
-});
-
-const slugify = (title) => {
-    return title
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, '-') // vervang alle niet-alfanumerieke tekens door een streepje
-        .replace(/^-|-$/g, ''); // verwijder streepjes aan het begin en einde
-};
-
-app.get("/blogs", async (req, res) => {
-  try {
-    // Fetch all published blogs from the database
-    const blogs = await Blog.find({ visibility: "published" })
-      .sort({ date: -1 })
-      .catch((err) => {
-        console.error("Error executing the query:", err);
-        res.status(500).send("An error occurred while querying the database.");
-      });
-
-    // If no blogs are found, log a message
-    if (!blogs || blogs.length === 0) {
-      console.log("No blogs found with visibility 'published'");
-    } else {
-      console.log("Fetched blogs:", JSON.stringify(blogs, null, 2));
-
-      // Ensure each blog has a slug (if not, create one)
-      blogs.forEach(async (blog) => {
-        if (!blog.slug) {
-          blog.slug = slugify(blog.title);
-          await blog.save().catch((err) => console.error("Error saving slug:", err));
-        }
-      });
+    // Validation
+    if (!name || !email || !address || !photo) {
+      return res.status(400).send("Alle velden zijn verplicht.");
     }
 
-    // Render the blogs.ejs template and pass the blog data
-    res.render("blogs", { blogs });
-  } catch (err) {
-    console.error("Error fetching blogs:", err);
-    res.status(500).send("An error occurred while retrieving blogs.");
+    // Save prijsvraag submission to database (optional)
+    // You can define a separate schema and model if needed
+
+    // Set up Nodemailer transport
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "contact@tha-diensten.nl", // replace with your email
+        pass: "YOUR_EMAIL_PASSWORD", // replace with your email password or app password
+      },
+    });
+
+    // Prepare the email
+    const mailOptions = {
+      from: "offerte@tha-diensten.nl",
+      to: "contact@tha-diensten.nl", // replace with the recipient email if different
+      subject: "Nieuwe Prijsvraag Inzending",
+      text: `Er is een nieuwe prijsvraag inzending ontvangen:
+
+Naam: ${name}
+E-mail: ${email}
+Adres: ${address}
+
+Foto: ${photo.path}`,
+      attachments: photo ? [{ path: photo.path }] : [],
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Fout bij het verzenden van de e-mail:", error);
+        return res.status(500).send({
+          message: "Verzenden van e-mail is mislukt. Probeer het later opnieuw.",
+          error: error.message,
+        });
+      }
+      console.log("E-mail succesvol verzonden:", info.response);
+      res.status(200).send({
+        message: "Inzending succesvol verzonden! Bedankt voor je deelname.",
+      });
+    });
+
+    // Optional: Log the submission to a local file
+    const prijsvraagLogPath = path.join(__dirname, "prijsvraag_submissions.log");
+    const logData = `Inzending ontvangen:
+Naam: ${name}
+E-mail: ${email}
+Adres: ${address}
+Foto: ${photo.path}
+Tijd: ${new Date().toISOString()}
+-------------------------------
+`;
+    fs.appendFileSync(prijsvraagLogPath, logData, "utf8");
+
+  } catch (error) {
+    console.error("Fout bij het verwerken van de inzending:", error);
+    res
+      .status(500)
+      .send({
+        message:
+          "Er is een onverwachte fout opgetreden bij het verwerken van uw inzending. Probeer het later opnieuw.",
+        error: error.message,
+      });
   }
 });
 
-
-
+// Utility function to get blogs by category
 const getBlogs = async (category) => {
   return await Blog.find({
     categories: category, // Use the category parameter
@@ -550,172 +596,7 @@ const getBlogs = async (category) => {
     .limit(6);
 };
 
-// Contact
-app.get("/contact", async (req, res) => {
-  try {
-    const blogs = await getBlogs("Schilderwerk"); // Specify the category as 'Schilderwerk'
-    res.render("contact", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-// Reiniging
-app.get("/reiniging", async (req, res) => {
-  try {
-    const blogs = await getBlogs("Reiniging"); // Use 'Reiniging' as category
-    res.render("reiniging", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-// Schildersbedrijf Hoorn
-app.get("/schildersbedrijf-hoorn", async (req, res) => {
-  console.log("ll");
-  try {
-    const blogs = await getBlogs("Schilderwerk"); // Specify 'Schilderwerk'
-    res.render("schildersbedrijf-hoorn", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-// Diensten
-app.get("/diensten", async (req, res) => {
-  try {
-    const blogs = await getBlogs("Diensten"); // Use 'Diensten' as category
-    res.render("diensten", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-// Zakelijk
-app.get("/zakelijk", async (req, res) => {
-  try {
-    const blogs = await getBlogs("Zakelijk"); // Use 'Zakelijk' as category
-    res.render("zakelijk", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-// Beglazing
-app.get("/beglazing", async (req, res) => {
-  try {
-    const blogs = await getBlogs("Beglazing"); // Use 'Beglazing' as category
-    res.render("beglazing", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-// Log file path
-const logFilePath = path.join(__dirname, "request_log.txt");
-
-// Middleware to log request to file
-function logToFile(data) {
-  const logEntry = `${new Date().toISOString()} - ${data}\n`;
-  fs.appendFileSync(logFilePath, logEntry, "utf8");
-}
-
-app.get("/report-ct", (req, res) => {
-  // Set the Expect-CT header
-  res.set(
-    "Expect-CT",
-    'max-age=86400, enforce, report-uri="https://tha-diensten.nl/report-ct"'
-  );
-
-  // Log request details
-  const logData = `Request from: ${req.ip}, Path: ${req.path}, User-Agent: ${req.headers["user-agent"]}`;
-  logToFile(logData);
-
-  // Respond to the client
-  res.send("Expect-CT header set and request logged.");
-});
-
-app.get("/timmerwerk", async (req, res) => {
-  try {
-    const blogs = await getBlogs("Timmerwerk"); // Use 'Timmerwerk' as category
-    res.render("timmerwerk", { blogs });
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .send("An error occurred while retrieving Timmerwerk blogs.");
-  }
-});
-
-// Dakreiniging
-app.get("/dakreiniging", async (req, res) => {
-  try {
-    const blogs = await getBlogs("Dakreiniging"); // Use 'Dakreiniging' as category
-    res.render("dakreiniging", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-// NEN2767
-app.get("/nen2767", async (req, res) => {
-  try {
-    const blogs = await getBlogs("NEN2767"); // Use 'NEN2767' as category
-    res.render("nen2767", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-// VVE
-app.get("/vve", async (req, res) => {
-  try {
-    const blogs = await getBlogs("VVE"); // Use 'VVE' as category
-    res.render("vve", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-// MJOP Manager
-app.get("/mjop-manager", async (req, res) => {
-  try {
-    const blogs = await getBlogs("MJOP Manager"); // Use 'MJOP Manager' as category
-    res.render("mjop-manager", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-app.get("/dakreiniging", async (req, res) => {
-  try {
-    const blogs = await getBlogs("Dakreiniging");
-    res.render("dakreiniging", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
-app.get("/wiezijnwij", async (req, res) => {
-  try {
-    const blogs = await getBlogs("Dakreiniging");
-    res.render("wiezijnwij", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
+// Route to render the homepage
 app.get("/", async (req, res) => {
   try {
     // Fetch the recent blogs from MongoDB
@@ -758,7 +639,7 @@ app.get("/blogs/:title", async (req, res) => {
     res.render("blog-details", {
       blog,
       recentPosts,
-      blogs: recentPosts, // voeg recentPosts toe als blogs voor gebruik in de partial
+      blogs: recentPosts, // Add recentPosts as blogs for use in partials
     });
   } catch (err) {
     console.error(err);
@@ -766,6 +647,7 @@ app.get("/blogs/:title", async (req, res) => {
   }
 });
 
+// List of URLs for proxying old content
 const urls = [
   "https://thas.tilda.ws/vastgoedonderhoud",
   "https://thas.tilda.ws/buitenschilderwerk",
@@ -830,7 +712,17 @@ app.use(async (req, res, next) => {
   }
 });
 
+// ====================== Prijsvraag Routes ======================
+
+// Route to serve the Prijsvraag form
+// Note: If you prefer the URL to be '/prijsvraag', ensure your HTML form's action points to '/submit-prijsvraag'
+app.get("/oplossing", (req, res) => {
+  res.render("oplossing"); // Ensure 'prijsvraag.ejs' exists in the 'views' directory
+});
+
+// ====================== End Prijsvraag Routes ======================
+
 // Start Express server
 app.listen(PORT, () => {
-  console.log(`Server is running on https://tha-diensten.nl`); // Adjusted domain for production
+  console.log(`Server is running on https://tha-diensten.nl`);
 });
