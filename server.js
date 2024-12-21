@@ -819,6 +819,8 @@ app.get("/old/*", async (req, res) => {
   }
 });
 
+
+
 // 404 Error Handler: Serve the 'Diensten' page for undefined routes
 app.use(async (req, res, next) => {
   try {
@@ -829,6 +831,76 @@ app.use(async (req, res, next) => {
     res.status(500).send("An error occurred while retrieving blogs.");
   }
 });
+
+// POST route for Prijsvraag
+app.post('/submit-prijsvraag', prijsvraagUpload.single('photo'), async (req, res) => {
+  try {
+    const { name, email, address } = req.body;
+    const photo = req.file;
+
+    if (!name || !email || !address || !photo) {
+      return res.status(400).send("Alle velden zijn verplicht.");
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER || "contact@tha-diensten.nl",
+        pass: process.env.EMAIL_PASS || "YOUR_EMAIL_PASSWORD",
+      },
+    });
+
+    const mailOptions = {
+      from: "offerte@tha-diensten.nl",
+      to: "contact@tha-diensten.nl",
+      subject: "Nieuwe Prijsvraag Inzending",
+      text: `Er is een nieuwe prijsvraag inzending ontvangen:
+
+Naam: ${name}
+E-mail: ${email}
+Adres: ${address}
+
+Foto: ${photo.path.replace(/\\/g, "/")}`,
+      attachments: photo ? [{ path: photo.path.replace(/\\/g, "/") }] : [],
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Fout bij het verzenden van de e-mail:", error);
+        return res.status(500).send({
+          message: "Verzenden van e-mail is mislukt. Probeer het later opnieuw.",
+          error: error.message,
+        });
+      }
+      console.log("E-mail succesvol verzonden:", info.response);
+      res.status(200).send({
+        message: "Inzending succesvol verzonden! Bedankt voor je deelname.",
+      });
+    });
+
+    const logData = `Inzending ontvangen:
+Naam: ${name}
+E-mail: ${email}
+Adres: ${address}
+Foto: ${photo.path.replace(/\\/g, "/")}
+Tijd: ${new Date().toISOString()}
+-------------------------------
+`;
+    fs.appendFileSync(path.join(__dirname, "prijsvraag_submissions.log"), logData, "utf8");
+  } catch (error) {
+    console.error("Fout bij het verwerken van de inzending:", error);
+    res.status(500).send({
+      message: "Er is een onverwachte fout opgetreden bij het verwerken van uw inzending. Probeer het later opnieuw.",
+      error: error.message,
+    });
+  }
+});
+
+// GET route for Oplossing
+app.get('/oplossing', (req, res) => {
+  res.render('oplossing');
+});
+
 
 // Start Express server
 app.listen(PORT, () => {
