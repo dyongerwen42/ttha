@@ -716,8 +716,8 @@ app.use(async (req, res, next) => {
 
 // Route to serve the Prijsvraag form
 // Note: If you prefer the URL to be '/prijsvraag', ensure your HTML form's action points to '/submit-prijsvraag'
-app.get("/prijsvraag", (req, res) => {
-  res.render("prijsvraag"); // Ensure 'prijsvraag.ejs' exists in the 'views' directory
+app.get("/oplossing", (req, res) => {
+  res.render("oplossing"); // Ensure 'prijsvraag.ejs' exists in the 'views' directory
 });
 
 // ====================== End Prijsvraag Routes ======================
