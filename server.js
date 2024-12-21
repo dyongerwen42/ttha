@@ -435,6 +435,9 @@ app.get("/behangen", async (req, res) => {
     res.status(500).send("An error occurred while retrieving Behangen blogs.");
   }
 });
+
+
+
 // Serve sitemap.xml
 app.get("/sitemap.xml", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "sitemap.xml"));
@@ -462,6 +465,11 @@ app.get("/binnenschilderwerk", async (req, res) => {
       .status(500)
       .send("An error occurred while retrieving Binnenschilderwerk blogs.");
   }
+});
+
+
+app.get('/oplossing', (req, res) => {
+  res.render('oplossing');
 });
 
 app.get("/buitenschilderwerk", async (req, res) => {
@@ -819,19 +827,6 @@ app.get("/old/*", async (req, res) => {
   }
 });
 
-
-
-// 404 Error Handler: Serve the 'Diensten' page for undefined routes
-app.use(async (req, res, next) => {
-  try {
-    const blogs = await getBlogs("Diensten"); // Use 'Diensten' as category
-    res.render("diensten", { blogs });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while retrieving blogs.");
-  }
-});
-
 // POST route for Prijsvraag
 app.post('/submit-prijsvraag', upload.single('photo'), async (req, res) => {
   try {
@@ -896,10 +891,22 @@ Tijd: ${new Date().toISOString()}
   }
 });
 
-// GET route for Oplossing
-app.get('/oplossing', (req, res) => {
-  res.render('oplossing');
+
+// 404 Error Handler: Serve the 'Diensten' page for undefined routes
+app.use(async (req, res, next) => {
+  try {
+    const blogs = await getBlogs("Diensten"); // Use 'Diensten' as category
+    res.render("diensten", { blogs });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("An error occurred while retrieving blogs.");
+  }
 });
+
+
+
+// GET route for Oplossing
+
 
 
 // Start Express server
