@@ -833,7 +833,7 @@ app.use(async (req, res, next) => {
 });
 
 // POST route for Prijsvraag
-app.post('/submit-prijsvraag', prijsvraagUpload.single('photo'), async (req, res) => {
+app.post('/submit-prijsvraag', upload.single('photo'), async (req, res) => {
   try {
     const { name, email, address } = req.body;
     const photo = req.file;
