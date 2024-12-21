@@ -5,25 +5,25 @@
     <%- include('partials/json') %>
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
 
-    <title>Prijsvraag - T.H.A Vastgoedonderhoud</title>
-    <meta name="description" content="Doe mee met onze prijsvraag! Maak kans op een van de drie flessen champagne of een restaurantbon van 100 euro. Vul het formulier in en upload je mooiste foto." />
+    <title>Nieuwjaars & Kerst Prijsvraag - T.H.A Vastgoedonderhoud</title>
+    <meta name="description" content="Doe mee met onze Nieuwjaars en Kerst prijsvraag! Maak kans op een restaurantbon van 100 euro, drie flessen champagne of twintig Tony chocolade repen. Vul het formulier in en upload je mooiste foto." />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- SEO Keywords -->
-    <meta name="keywords" content="prijsvraag, win, flessen champagne, restaurantbon, T.H.A Vastgoedonderhoud" />
+    <meta name="keywords" content="prijsvraag, nieuwjaar, kerst, win, restaurantbon, flessen champagne, chocolade repen, T.H.A Vastgoedonderhoud" />
 
     <!-- Open Graph for social media -->
-    <meta property="og:title" content="Prijsvraag - T.H.A Vastgoedonderhoud" />
-    <meta property="og:description" content="Doe mee met onze prijsvraag en maak kans op fantastische prijzen! Drie flessen champagne en een restaurantbon van 100 euro wachten op jou." />
-    <meta property="og:image" content="https://www.tha-diensten.nl/assets/img/prijsvraag/prize-image.webp" />
+    <meta property="og:title" content="Nieuwjaars & Kerst Prijsvraag - T.H.A Vastgoedonderhoud" />
+    <meta property="og:description" content="Doe mee met onze feestelijke prijsvraag en maak kans op een restaurantbon van 100 euro, drie flessen champagne of twintig Tony chocolade repen. Vier de feestdagen met ons mee!" />
+    <meta property="og:image" content="https://www.tha-diensten.nl/assets/img/prijsvraag/festive-prize-image.webp" />
     <meta property="og:url" content="https://www.tha-diensten.nl/prijsvraag" />
     <meta property="og:type" content="website" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Prijsvraag - T.H.A Vastgoedonderhoud" />
-    <meta name="twitter:description" content="Doe mee met onze prijsvraag en maak kans op fantastische prijzen! Drie flessen champagne en een restaurantbon van 100 euro wachten op jou." />
-    <meta name="twitter:image" content="https://www.tha-diensten.nl/assets/img/prijsvraag/prize-image.webp" />
+    <meta name="twitter:title" content="Nieuwjaars & Kerst Prijsvraag - T.H.A Vastgoedonderhoud" />
+    <meta name="twitter:description" content="Doe mee met onze feestelijke prijsvraag en maak kans op een restaurantbon van 100 euro, drie flessen champagne of twintig Tony chocolade repen. Vier de feestdagen met ons mee!" />
+    <meta name="twitter:image" content="https://www.tha-diensten.nl/assets/img/prijsvraag/festive-prize-image.webp" />
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.webp" />
@@ -54,137 +54,281 @@
     /* Root colors and fonts */
     :root {
         --tg-body-font-family: 'DM Sans', sans-serif;
-        --tg-primary-color: #3791A6; /* Teal blue */
-        --tg-secondary-color: #72A6A6; /* Lighter teal */
-        --tg-body-font-color: #4F7373; /* Muted teal */
-        --tg-heading-font-color: #0D0D0D; /* Black */
-        --tg-section-background: #F2F2F2; /* Light gray */
+        --tg-primary-color: #D32F2F; /* Festive Red */
+        --tg-secondary-color: #388E3C; /* Festive Green */
+        --tg-body-font-color: #555555; /* Dark Gray */
+        --tg-heading-font-color: #212121; /* Almost Black */
+        --tg-section-background: #FFFAF0; /* Floral White for a cozy feel */
     }
     
     /* Form Styling */
     .prijsvraag-form {
         background-color: var(--tg-section-background);
-        padding: 40px;
-        border-radius: 15px;
-        max-width: 800px;
+        padding: 50px;
+        border-radius: 20px;
+        max-width: 900px;
         margin: auto;
         font-family: var(--tg-body-font-family);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        position: relative;
+    }
+    
+    /* Festive Decorations */
+    .prijsvraag-form::before,
+    .prijsvraag-form::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-image: url('/assets/img/prijsvraag/snowflake.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.7;
+    }
+    
+    .prijsvraag-form::before {
+        top: -25px;
+        left: -25px;
+    }
+    
+    .prijsvraag-form::after {
+        bottom: -25px;
+        right: -25px;
     }
     
     h2.title {
-        font-size: 28px;
+        font-size: 36px;
         font-weight: bold;
         color: var(--tg-heading-font-color);
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         text-align: center;
+        position: relative;
+    }
+    
+    h2.title::after {
+        content: '';
+        width: 60px;
+        height: 60px;
+        background-image: url('/assets/img/prijsvraag/christmas-star.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
     }
     
     p.description {
         text-align: center;
-        font-size: 18px;
+        font-size: 20px;
         color: var(--tg-body-font-color);
-        margin-bottom: 30px;
+        margin-bottom: 50px;
     }
     
     .form-group {
-        margin-bottom: 25px;
+        margin-bottom: 35px;
     }
 
     .form-group label {
         display: block;
-        font-weight: 600;
-        margin-bottom: 8px;
+        font-weight: 700;
+        margin-bottom: 10px;
         color: var(--tg-heading-font-color);
     }
     
     .form-control {
         width: 100%;
-        padding: 14px;
+        padding: 18px;
         border: 1px solid var(--tg-body-font-color);
-        border-radius: 8px;
-        font-size: 16px;
+        border-radius: 12px;
+        font-size: 18px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        background-color: #FFFFFF;
+    }
+    
+    .form-control:focus {
+        border-color: var(--tg-primary-color);
+        outline: none;
+        box-shadow: 0 0 10px rgba(211, 47, 47, 0.3);
     }
     
     .prijsvraag-btn {
         background-color: var(--tg-primary-color);
         color: white;
-        padding: 14px 30px;
+        padding: 18px 50px;
         border: none;
-        border-radius: 8px;
-        font-size: 16px;
+        border-radius: 12px;
+        font-size: 20px;
         cursor: pointer;
         width: 100%;
-        max-width: 220px;
-        margin: 20px auto 0;
+        max-width: 300px;
+        margin: 40px auto 0;
         display: block;
         text-transform: uppercase;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        font-weight: bold;
     }
     
     .prijsvraag-btn:hover {
-        background-color: #2f7e93;
+        background-color: var(--tg-secondary-color);
+        transform: translateY(-3px);
     }
 
     /* Prizes Section */
     .prizes-section {
         background-color: var(--tg-section-background);
-        padding: 40px;
-        border-radius: 15px;
-        max-width: 800px;
-        margin: 40px auto;
+        padding: 50px;
+        border-radius: 20px;
+        max-width: 900px;
+        margin: 80px auto;
         text-align: center;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        position: relative;
+    }
+    
+    .prizes-section::before,
+    .prizes-section::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-image: url('/assets/img/prijsvraag/holly.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.8;
+    }
+    
+    .prizes-section::before {
+        top: -25px;
+        left: -25px;
+    }
+    
+    .prizes-section::after {
+        bottom: -25px;
+        right: -25px;
     }
     
     .prizes-section h3 {
-        font-size: 22px;
+        font-size: 28px;
         font-weight: bold;
         color: var(--tg-heading-font-color);
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .prizes-section h3::after {
+        content: '';
+        width: 50px;
+        height: 50px;
+        background-image: url('/assets/img/prijsvraag/gift-box.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
     }
     
     .prizes-list {
         list-style: none;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     
     .prizes-list li {
-        font-size: 18px;
+        font-size: 20px;
         color: var(--tg-body-font-color);
-        margin-bottom: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .prizes-list li i {
+        margin-right: 15px;
+        color: var(--tg-primary-color);
+        font-size: 24px;
     }
 
     /* Owner Contact */
     .owner-contact {
         text-align: center;
-        margin-top: 30px;
+        margin-top: 50px;
     }
 
     .owner-avatar img {
-        width: 120px;
-        height: 120px;
+        width: 160px;
+        height: 160px;
         border-radius: 50%;
-        border: 3px solid var(--tg-primary-color);
+        border: 5px solid var(--tg-primary-color);
         object-fit: cover;
+        margin-bottom: 20px;
     }
 
     .owner-name {
-        font-size: 20px;
+        font-size: 24px;
         color: var(--tg-heading-font-color);
         font-weight: bold;
         margin-top: 10px;
     }
 
     .owner-message {
-        font-size: 16px;
+        font-size: 18px;
         color: var(--tg-body-font-color);
-        margin-top: 10px;
+        margin-top: 15px;
         font-style: italic;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     /* Responsive Design */
-    @media (max-width: 768px) {
+    @media (max-width: 992px) {
+        .prijsvraag-form, .prizes-section {
+            padding: 40px;
+        }
         .prijsvraag-btn {
+            padding: 16px 40px;
+            font-size: 18px;
+        }
+        .prizes-section h3 {
+            font-size: 26px;
+        }
+        .prizes-list li {
+            font-size: 18px;
+        }
+        .owner-avatar img {
+            width: 140px;
+            height: 140px;
+        }
+        .owner-message {
+            font-size: 16px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .prijsvraag-form, .prizes-section {
+            padding: 30px;
+        }
+        .prijsvraag-btn {
+            padding: 14px 30px;
+            font-size: 16px;
             max-width: 100%;
+        }
+        .prizes-section h3 {
+            font-size: 24px;
+        }
+        .prizes-list li {
+            font-size: 16px;
+        }
+        .owner-avatar img {
+            width: 120px;
+            height: 120px;
+        }
+        .owner-message {
+            font-size: 14px;
         }
     }
 </style>
@@ -210,17 +354,18 @@
         <section class="prijsvraag-area pt-130 pb-100">
             <div class="container">
                 <div class="prijsvraag-form">
-                    <h2 class="title">Doe mee met onze Prijsvraag!</h2>
+                    <h2 class="title">Doe mee met onze Nieuwjaars & Kerst Prijsvraag!</h2>
                     <p class="description">
-                        Maak kans op een van de drie flessen champagne of een restaurantbon van 100 euro. Vul hieronder je gegevens in en upload je mooiste foto om mee te doen.
+                        Vier de feestdagen met T.H.A Vastgoedonderhoud en maak kans op een van de drie fantastische prijzen: een restaurantbon van 100 euro, drie flessen champagne of twintig Tony chocolade repen. Vul hieronder je gegevens in en upload je mooiste foto om mee te doen.
                     </p>
                     
                     <!-- Prijzen Sectie -->
                     <div class="prizes-section">
                         <h3>Onze Prijzen</h3>
                         <ul class="prizes-list">
-                            <li>🥂 Drie flessen champagne</li>
-                            <li>🍽️ Een restaurantbon van 100 euro</li>
+                            <li><i class="fas fa-utensils"></i>🍽️ Een restaurantbon van 100 euro</li>
+                            <li><i class="fas fa-wine-glass-alt"></i>🥂 Drie flessen champagne</li>
+                            <li><i class="fas fa-candy-cane"></i>🍫 Twintig Tony chocolade repen</li>
                         </ul>
                     </div>
 
@@ -236,7 +381,7 @@
                         </div>
                         <div class="form-group">
                             <label for="address">Adres</label>
-                            <input type="text" id="address" placeholder="Uw adres" name="address" class="form-control" required>
+                            <input type="text" id="address" placeholder="Straat, Nummer en Stad" name="address" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="photo">Upload je foto</label>
@@ -251,7 +396,7 @@
                         <div class="owner-avatar">
                             <img src="/assets/img/team/thierry.jpg" alt="Thierry Henrich" class="avatar-image">
                             <h3 class="owner-name">Thierry Henrich</h3>
-                            <p class="owner-message">"Doe mee en maak kans op geweldige prijzen! Ik kijk ernaar uit om jouw inzending te zien."</p>
+                            <p class="owner-message">"Doe mee en maak kans op geweldige prijzen! Ik kijk ernaar uit om jouw inzending te zien en samen de feestdagen te vieren."</p>
                         </div>
                     </div>
                 </div>
